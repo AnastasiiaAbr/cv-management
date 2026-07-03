@@ -5,6 +5,7 @@ import CVs from "./pages/CVs";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import PositionDetails from "./pages/PositionDetails";
+import CreatePosition from "./pages/CreatePositions";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path='/positions' element={<Positions />} />
           <Route path='/positions/:id' element={<PositionDetails />} />
+          <Route path='/positions/new' element={<CreatePosition/>} />
           <Route path='/cvs' element={<CVs />} />
         </Route>
 

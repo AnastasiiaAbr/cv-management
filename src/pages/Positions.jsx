@@ -1,13 +1,31 @@
-import { Card, CardActionArea, CardContent, Grid, Typography } from "@mui/material"
+import { Card, CardActionArea, CardContent, Grid, Typography, Box, Button } from "@mui/material"
+import AddIcon from '@mui/icons-material/Add';
 import { Link } from "react-router-dom";
-import positions from "../data/positions";
+import { usePositions } from "../context/PositionContext";
 
 export default function Positions() {
+  const { positions } = usePositions();
   return (
     <>
-      <Typography variant='h4' gutterBottom>
-        Positions
-      </Typography>
+      <Box
+        display='flex'
+        justifyContent='space-between'
+        alignItems='center'
+        mb={3}
+      >
+        <Typography variant='h4'>
+          Positions
+        </Typography>
+
+        <Button 
+        variant="contained"
+        startIcon={<AddIcon/>}
+        component={Link}
+        to='/positions/new'
+        >
+          Add position
+        </Button>
+      </Box>
 
       <Grid container spacing={2}>
         {positions.map((position) => (

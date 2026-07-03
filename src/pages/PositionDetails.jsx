@@ -1,12 +1,14 @@
-import {Paper, Typography, List, ListItem, ListItemIcon, ListItemText, Button, Divider, Stack} from "@mui/material";
+import { Paper, Typography, List, ListItem, ListItemText, Button, Divider, Stack } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import positions from "../data/positions";
+import { usePositions } from "../context/PositionContext";
+import EditIcon from '@mui/icons-material/Edit';
+
 
 export default function PositionDetails() {
   const { id } = useParams();
-  const position = positions.find(
-    (p) => p.id === Number(id)
-  );
+  const { getPositionById } = usePositions();
+  const position = getPositionById(id);
+
   if (!position) {
     return (
       <Typography variant="h4">
@@ -49,14 +51,24 @@ export default function PositionDetails() {
           </List>
         </div>
 
-        <Button
-          variant="contained"
-          component={Link}
-          to="/positions"
-          sx={{ alignSelf: "flex-start" }}
-        >
-          Back to Positions
-        </Button>
+        <Stack direction='row' spacing={2}>
+          <Button
+            variant="contained"
+            component={Link}
+            to={`/positions/${id}/edit`}
+            startIcon={<EditIcon />}>
+            Edit
+          </Button>
+
+          <Button
+            variant='outlined'
+            component={Link}
+            to="/positions"
+            sx={{ alignSelf: "flex-start" }}
+          >
+            Back to Positions
+          </Button>
+        </Stack>
       </Stack>
     </Paper>
   );
