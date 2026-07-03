@@ -50,6 +50,11 @@ const updatePosition = (id, updatedPosition) => {
   );
 };
 
+const deletePosition = (id) => {
+  setPositions((prevPositions) => 
+  prevPositions.filter((position) => position.id !== Number(id)))
+}
+
   return (
     <PositionContext.Provider
       value={{
@@ -57,6 +62,7 @@ const updatePosition = (id, updatedPosition) => {
         getPositionById,
         addPosition,
         updatePosition,
+        deletePosition,
       }}
     >
       {children}
