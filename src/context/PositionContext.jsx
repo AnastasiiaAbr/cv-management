@@ -7,19 +7,67 @@ const initialPositions = [
     id: 1,
     title: "Meow",
     description: "Professional cat",
-    attributes: ["Sleep", "Purr", "Catch mice"],
+    attributes: [
+      {
+        id: 1,
+        name: 'Sleep',
+        type: 'select',
+      },
+      {
+        id: 2,
+        name: "Purr",
+        type: 'select',
+      },
+      {
+        id: 3,
+        name: "Catch mice",
+        type: 'select'
+      }
+    ],
   },
   {
     id: 2,
     title: "CattyCat",
     description: "The best cat",
-    attributes: ["Jump", "Play", "Eat"],
+    attributes: [
+      {
+        id: 1,
+        name: 'Jump',
+        type: 'select',
+      },
+      {
+        id: 2,
+        name: "Play",
+        type: 'select',
+      },
+      {
+        id: 3,
+        name: "Eat",
+        type: 'select'
+      }
+    ],
   },
   {
     id: 3,
     title: "MeowMeowMeow",
     description: "Very loud cat",
-    attributes: ["Meow", "Run", "Scratch"],
+    attributes: [
+      {
+        id: 1,
+        name: 'Meow',
+        type: 'select',
+      },
+      {
+        id: 2,
+        name: "Run",
+        type: 'select',
+      },
+      {
+        id: 3,
+        name: "Scratch",
+        type: 'select'
+      }
+    ],
   },
 ];
 
@@ -28,11 +76,11 @@ export function PositionProvider({ children }) {
 
   const addPosition = (newPosition) => {
     setPositions((prevPositions) => [
-      ...prevPositions, 
+      ...prevPositions,
       {
         id: Date.now(),
         attributes: [],
-        ...newPosition, 
+        ...newPosition,
       }
     ])
   }
@@ -40,20 +88,72 @@ export function PositionProvider({ children }) {
     return positions.find((position) => position.id === Number(id));
   };
 
-const updatePosition = (id, updatedPosition) => {
+  const updatePosition = (id, updatedPosition) => {
+    setPositions((prevPositions) =>
+      prevPositions.map((position) =>
+        position.id === Number(id)
+          ? { ...position, ...updatedPosition }
+          : position
+      )
+    );
+  };
+
+  const deletePosition = (id) => {
+    setPositions((prevPositions) =>
+      prevPositions.filter((position) => position.id !== Number(id)))
+  }
+
+  const addAttribute = (positionId, newAttribute) => {
+    setPositions((prevPositions) =>
+      prevPositions.map((position) => {
+        if (position.id !== Number(positionId)) {
+          return position;
+        }
+
+        return {
+          ...position,
+          attributes: [
+            ...position.attributes,
+            {
+              id: Date.now(),
+              ...newAttribute,
+            },
+          ],
+        };
+      })
+    );
+  };
+
+  const updateAttribute = (positionId, attributeId, updatedAttribute) => {
   setPositions((prevPositions) =>
-    prevPositions.map((position) =>
-      position.id === Number(id)
-        ? { ...position, ...updatedPosition }
-        : position
-    )
+    prevPositions.map((position) => {
+      if (position.id !== Number(positionId)) {
+        return position;
+      }
+
+      return {
+        ...position,
+        attributes: position.attributes.map((attribute) =>
+          attribute.id === Number(attributeId)
+            ? { ...attribute, ...updatedAttribute }
+            : attribute
+        ),
+      };
+    })
   );
 };
 
-const deletePosition = (id) => {
-  setPositions((prevPositions) => 
-  prevPositions.filter((position) => position.id !== Number(id)))
-}
+const getAttributeById = (positionId, attributeId) => {
+  const position = getPositionById(positionId);
+
+  if (!position) {
+    return null;
+  }
+
+  return position.attributes.find(
+    (attribute) => attribute.id === Number(attributeId)
+  );
+};
 
   return (
     <PositionContext.Provider
@@ -63,6 +163,9 @@ const deletePosition = (id) => {
         addPosition,
         updatePosition,
         deletePosition,
+        addAttribute,
+        updateAttribute,
+        getAttributeById,
       }}
     >
       {children}

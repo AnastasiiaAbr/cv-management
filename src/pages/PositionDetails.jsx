@@ -1,4 +1,4 @@
-import { Paper, Typography, List, ListItem, ListItemText, Button, Divider, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { Chip, Paper, Typography, List, ListItem, ListItemText, Button, Divider, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { usePositions } from "../context/PositionContext";
 import EditIcon from '@mui/icons-material/Edit';
@@ -60,9 +60,19 @@ export default function PositionDetails() {
 
             <List>
               {position.attributes.map((attribute) => (
-                <ListItem key={attribute}>
-
-                  <ListItemText primary={attribute} />
+                <ListItem key={attribute.id}
+                  secondaryAction={
+                    <Chip
+                      label={attribute.type}
+                      color='primary'
+                      variant="outlined"
+                      size='small'
+                    />
+                  }
+                >
+                  <ListItemText
+                    primary={attribute.name}
+                  />
                 </ListItem>
               ))}
             </List>
@@ -75,6 +85,13 @@ export default function PositionDetails() {
               to={`/positions/${id}/edit`}
               startIcon={<EditIcon />}>
               Edit
+            </Button>
+
+            <Button
+            variant='contained'
+            component={Link}
+            to={`/positions/${id}/attributes`}>
+              Manage Attributes
             </Button>
 
             <Button
@@ -96,14 +113,14 @@ export default function PositionDetails() {
         </Stack>
       </Paper>
       <Dialog open={open}
-        onclse={handleClose}>
+        onClose={handleClose}>
         <DialogTitle>
           Delete Position
         </DialogTitle>
 
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this position? Yhis action cannot be undone
+            Are you sure you want to delete this position? This action cannot be undone
           </DialogContentText>
         </DialogContent>
 
