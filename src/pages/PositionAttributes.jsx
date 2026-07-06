@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 export default function PositionAttributes() {
   const { id } = useParams();
-  const { getPositionById } = usePositions();
+  const { getPositionById, deleteAttribute } = usePositions();
 
   const position = getPositionById(id);
 
@@ -39,7 +39,7 @@ export default function PositionAttributes() {
                   {attribute.name}
                 </Typography>
 
-                <Stack direction="row" spacing={2} alignItems="center">
+                <Stack direction="row" spacing={1} alignItems="center">
                   <Chip
                     label={attribute.type}
                     variant="outlined"
@@ -51,6 +51,14 @@ export default function PositionAttributes() {
                     to={`/positions/${id}/attributes/${attribute.id}/edit`}
                   >
                     Edit
+                  </Button>
+
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => deleteAttribute(id, attribute.id)}
+                  >
+                    Delete
                   </Button>
                 </Stack>
               </Stack>

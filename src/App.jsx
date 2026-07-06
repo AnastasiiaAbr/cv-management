@@ -10,6 +10,7 @@ import PositionAttributes from "./pages/PositionAttributes";
 import CreateAttribute from "./pages/CreateAttribute";
 import EditAttribute from "./pages/EditAttribute";
 import EditPosition from "./pages/EditPositions";
+import Attributes from "./pages/Attributes";
 
 function App() {
   return (
@@ -22,8 +23,9 @@ function App() {
           <Route path='/positions/new' element={<CreatePosition/>} />
           <Route path='/positions/:id/edit' element={<EditPosition />} />
           <Route path='/positions/:id/attributes' element={<PositionAttributes/>} />
-          <Route path='/positions/:id/attributes/new' element={<CreateAttribute />}/>
-          <Route path="positions/:id/attributes/:attributeId/edit" element={<EditAttribute />} />
+          <Route path='/attributes/new' element={<CreateAttribute />}/>
+          <Route path='/attributes' element={<Attributes />} />
+          <Route path='/attributes/:id/edit' element={<EditAttribute />} />
           <Route path='/cvs' element={<CVs />} />
         </Route>
 

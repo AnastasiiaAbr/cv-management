@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import {
   Button,
   MenuItem,
@@ -13,14 +12,22 @@ const ATTRIBUTE_TYPES = [
   "number",
   "select",
   "date",
+  "boolean",
 ];
 
 export default function AttributeForm({
-  initialValues,
+  initialValues = {
+    category: "",
+    name: "",
+    description: "",
+    type: "text",
+  },
   onSubmit,
   submitLabel,
 }) {
+  const [category, setCategory] = useState(initialValues.category);
   const [name, setName] = useState(initialValues.name);
+  const [description, setDescription] = useState(initialValues.description);
   const [type, setType] = useState(initialValues.type);
 
   const handleSubmit = (event) => {
@@ -31,7 +38,9 @@ export default function AttributeForm({
     }
 
     onSubmit({
+      category,
       name,
+      description,
       type,
     });
   };
@@ -44,10 +53,27 @@ export default function AttributeForm({
         onSubmit={handleSubmit}
       >
         <TextField
+          label="Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+          fullWidth
+        />
+
+        <TextField
           label="Attribute Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          fullWidth
+        />
+
+        <TextField
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          multiline
+          rows={3}
           fullWidth
         />
 

@@ -25,6 +25,11 @@ export default function Header() {
           </Button>
           <Button
             color='inherit'
+            component={Link} to='/attributes'>
+            Attribute library
+          </Button>
+          <Button
+            color='inherit'
             component={Link} to='/cvs'>
             CVs
           </Button>

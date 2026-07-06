@@ -1,19 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom";
 
 import AttributeForm from "../components/AttributeForm";
-import { usePositions } from "../context/PositionContext";
+import { useAttributes } from "../context/AttributeContext";
 
 export default function EditAttribute() {
-  const { id, attributeId } = useParams();
-
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const {
     getAttributeById,
     updateAttribute,
-  } = usePositions();
+  } = useAttributes();
 
-  const attribute = getAttributeById(id, attributeId);
+  const attribute = getAttributeById(id);
 
   if (!attribute) {
     return <div>Attribute not found</div>;
@@ -24,9 +23,8 @@ export default function EditAttribute() {
       initialValues={attribute}
       submitLabel="Save Changes"
       onSubmit={(updatedAttribute) => {
-        updateAttribute(id, attributeId, updatedAttribute);
-
-        navigate(`/positions/${id}/attributes`);
+        updateAttribute(id, updatedAttribute);
+        navigate("/attributes");
       }}
     />
   );

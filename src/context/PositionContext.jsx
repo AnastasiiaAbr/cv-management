@@ -101,76 +101,21 @@ export function PositionProvider({ children }) {
   const deletePosition = (id) => {
     setPositions((prevPositions) =>
       prevPositions.filter((position) => position.id !== Number(id)))
-  }
-
-  const addAttribute = (positionId, newAttribute) => {
-    setPositions((prevPositions) =>
-      prevPositions.map((position) => {
-        if (position.id !== Number(positionId)) {
-          return position;
-        }
-
-        return {
-          ...position,
-          attributes: [
-            ...position.attributes,
-            {
-              id: Date.now(),
-              ...newAttribute,
-            },
-          ],
-        };
-      })
-    );
   };
 
-  const updateAttribute = (positionId, attributeId, updatedAttribute) => {
-  setPositions((prevPositions) =>
-    prevPositions.map((position) => {
-      if (position.id !== Number(positionId)) {
-        return position;
-      }
-
-      return {
-        ...position,
-        attributes: position.attributes.map((attribute) =>
-          attribute.id === Number(attributeId)
-            ? { ...attribute, ...updatedAttribute }
-            : attribute
-        ),
-      };
-    })
-  );
-};
-
-const getAttributeById = (positionId, attributeId) => {
-  const position = getPositionById(positionId);
-
-  if (!position) {
-    return null;
-  }
-
-  return position.attributes.find(
-    (attribute) => attribute.id === Number(attributeId)
-  );
-};
-
-  return (
-    <PositionContext.Provider
-      value={{
-        positions,
-        getPositionById,
-        addPosition,
-        updatePosition,
-        deletePosition,
-        addAttribute,
-        updateAttribute,
-        getAttributeById,
-      }}
-    >
-      {children}
-    </PositionContext.Provider>
-  );
+return (
+  <PositionContext.Provider
+    value={{
+      positions,
+      getPositionById,
+      addPosition,
+      updatePosition,
+      deletePosition,
+    }}
+  >
+    {children}
+  </PositionContext.Provider>
+);
 }
 
 export function usePositions() {

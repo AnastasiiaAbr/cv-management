@@ -5,13 +5,16 @@ import App from './App.jsx'
 import { PositionProvider } from './context/PositionContext.jsx'
 import { ThemeProvider } from '@mui/material';
 import theme from './theme/theme.js';
+import { AttributeProvider } from './context/AttributeContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
-    <PositionProvider>
-      <App />
-    </PositionProvider>
+      <AttributeProvider>
+        <PositionProvider>
+          <App />
+        </PositionProvider>
+      </AttributeProvider>
     </ThemeProvider>
   </StrictMode>,
 )

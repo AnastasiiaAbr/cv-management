@@ -1,27 +1,21 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import AttributeForm from "../components/AttributeForm";
-import { usePositions } from "../context/PositionContext";
+import { useAttributes } from "../context/AttributeContext";
 
 export default function CreateAttribute() {
-  const { id } = useParams();
-
   const navigate = useNavigate();
+  const { addAttribute } = useAttributes();
 
-  const { addAttribute } = usePositions();
+  const handleSubmit = (newAttribute) => {
+    addAttribute(newAttribute);
+    navigate("/attributes");
+  };
 
   return (
     <AttributeForm
-      initialValues={{
-        name: "",
-        type: "text",
-      }}
       submitLabel="Create Attribute"
-      onSubmit={(attribute) => {
-        addAttribute(id, attribute);
-
-        navigate(`/positions/${id}/attributes`);
-      }}
+      onSubmit={handleSubmit}
     />
   );
 }

@@ -58,6 +58,14 @@ export default function PositionDetails() {
               Attributes
             </Typography>
 
+            <Button
+              variant="contained"
+              component={Link}
+              to={`/positions/${id}/profile`}
+            >
+              Candidate Profile
+            </Button>
+
             <List>
               {position.attributes.map((attribute) => (
                 <ListItem key={attribute.id}
@@ -88,9 +96,9 @@ export default function PositionDetails() {
             </Button>
 
             <Button
-            variant='contained'
-            component={Link}
-            to={`/positions/${id}/attributes`}>
+              variant='contained'
+              component={Link}
+              to={`/positions/${id}/attributes`}>
               Manage Attributes
             </Button>
 
