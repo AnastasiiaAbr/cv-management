@@ -1,9 +1,10 @@
 import { Chip, Paper, Typography, List, ListItem, ListItemText, Button, Divider, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { usePositions } from "../context/PositionContext";
+import { usePositions } from "../../context/PositionContext";
 import EditIcon from '@mui/icons-material/Edit';
 import { useState } from "react";
-import { useAttributes } from "../context/AttributeContext";
+import { useAttributes } from "../../context/AttributeContext";
+import ConfirmDialog from "../../components/common/ConfirmDialog";
 
 
 export default function PositionDetails() {
@@ -111,31 +112,14 @@ export default function PositionDetails() {
           </Stack>
         </Stack>
       </Paper>
-      <Dialog open={open}
-        onClose={handleClose}>
-        <DialogTitle>
-          Delete Position
-        </DialogTitle>
 
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this position? This action cannot be undone
-          </DialogContentText>
-        </DialogContent>
-
-        <DialogActions>
-          <Button onClick={handleClose}>
-            Cancel
-          </Button>
-
-          <Button
-            color='error'
-            variant='contained'
-            onClick={handleDelete}>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmDialog
+        open={open}
+        title="Delete Position"
+        message="Are you sure you want to delete this position? This action cannot be undone."
+        onCancel={handleClose}
+        onConfirm={handleDelete}
+      />
     </>
   );
 }

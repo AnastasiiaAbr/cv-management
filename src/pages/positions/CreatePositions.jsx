@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { usePositions } from "../context/PositionContext";
+import { usePositions } from "../../context/PositionContext";
 import { Stack, Typography, Paper, TextField, Button } from "@mui/material";
 import { useState } from "react";
-import PositionForm from "../components/PositionForm";
+import PositionForm from "../../components/PositionForm";
 
 export default function CreatePosition() {
   const navigate = useNavigate();

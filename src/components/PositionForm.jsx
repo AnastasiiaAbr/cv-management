@@ -1,31 +1,22 @@
 import { useState } from "react";
 import {
-  Snackbar,
-  List,
-  ListItem,
-  Typography,
   Button,
   Paper,
   Stack,
-  TextField, Autocomplete, Chip
+  TextField,
 } from "@mui/material";
-import { useAttributes } from "../context/AttributeContext";
+
+import AttributeSelector from "./attributes/AttributeSelector";
 
 export default function PositionForm({
   initialValues,
   onSubmit,
   submitLabel,
 }) {
-  const { attributes } = useAttributes();
-
   const [title, setTitle] = useState(initialValues.title);
   const [description, setDescription] = useState(initialValues.description);
-  const [selectedAttribute, setSelectedAttribute] = useState(null);
-  const [selectedAttributeIds, setSelectedAttributeIds] = useState(initialValues.attributeIds ?? []);
-  const [snackbarOpen, setSnackbarOpen] = useState(null);
-
-  const selectedAttributes = attributes.filter((attribute) =>
-    selectedAttributeIds.includes(attribute.id)
+  const [attributeIds, setAttributeIds] = useState(
+    initialValues.attributeIds ?? []
   );
 
   const handleSubmit = (event) => {
@@ -38,32 +29,8 @@ export default function PositionForm({
     onSubmit({
       title,
       description,
-      attributeIds: selectedAttributeIds,
+      attributeIds,
     });
-  };
-
-  const handleAddAttribute = () => {
-    if (!selectedAttribute) {
-      return;
-    };
-
-    if (selectedAttributeIds.includes(selectedAttribute.id)) {
-      setSnackbarOpen(true);
-      return;
-    };
-
-    setSelectedAttributeIds((prev) => [
-      ...prev,
-      selectedAttribute.id,
-    ]);
-
-    setSelectedAttribute(null);
-  };
-
-  const handleRemoveAttribute = (attributeId) => {
-    setSelectedAttributeIds((prev) =>
-      prev.filter((id) => id !== attributeId)
-    );
   };
 
   return (
@@ -91,26 +58,10 @@ export default function PositionForm({
           required
         />
 
-        <Autocomplete
-          options={attributes}
-          value={selectedAttribute}
-          onChange={(_, value) => setSelectedAttribute(value)}
-          getOptionLabel={(option) => option.name}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Attribute"
-            />
-          )}
+        <AttributeSelector
+          value={attributeIds}
+          onChange={setAttributeIds}
         />
-
-        <Button
-          variant="contained"
-          onClick={handleAddAttribute}
-          disabled={!selectedAttribute}
-        >
-          Add Attribute
-        </Button>
 
         <Button
           type="submit"
@@ -118,47 +69,7 @@ export default function PositionForm({
         >
           {submitLabel}
         </Button>
-
-        <List>
-          {selectedAttributes.map((attribute) => (
-            <ListItem key={attribute.id}>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                width="100%"
-              >
-                <Stack direction="row" spacing={2} alignItems="center">
-                  <Typography>
-                    {attribute.name}
-                  </Typography>
-
-                  <Chip
-                    label={attribute.type}
-                    size="small"
-                    variant="outlined"
-                  />
-                </Stack>
-
-                <Button
-                  size="small"
-                  color="error"
-                  onClick={() => handleRemoveAttribute(attribute.id)}
-                >
-                  Remove
-                </Button>
-              </Stack>
-            </ListItem>
-          ))}
-        </List>
       </Stack>
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message="This attribute has already been added."
-      />
     </Paper>
   );
 }

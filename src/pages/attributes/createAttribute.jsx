@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-import AttributeForm from "../components/AttributeForm";
-import { useAttributes } from "../context/AttributeContext";
+import AttributeForm from "../../components/attributes/AttributeForm";
+import { useAttributes } from "../../context/AttributeContext";
 
 export default function CreateAttribute() {
   const navigate = useNavigate();

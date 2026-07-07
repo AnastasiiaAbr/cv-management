@@ -1,7 +1,7 @@
 import { Paper, Card, CardActionArea, CardContent, Grid, Typography, Box, Button } from "@mui/material"
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from "react-router-dom";
-import { usePositions } from "../context/PositionContext";
+import { usePositions } from "../../context/PositionContext";
 
 export default function Positions() {
   const { positions } = usePositions();

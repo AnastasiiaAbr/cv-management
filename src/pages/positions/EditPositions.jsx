@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 
-import PositionForm from "../components/PositionForm";
-import { usePositions } from "../context/PositionContext";
+import PositionForm from "../../components/PositionForm";
+import { usePositions } from "../../context/PositionContext";
 
 export default function EditPosition() {
   const { id } = useParams();

@@ -1,17 +1,24 @@
 import {
   Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button,
-  Box, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, 
+  Box, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import ConfirmDialog from "../../components/common/ConfirmDialog";
 
-import { useAttributes } from "../context/AttributeContext";
+import { useAttributes } from "../../context/AttributeContext";
 
 export default function Attributes() {
   const { attributes, deleteAttribute } = useAttributes();
   const [selectedAttributeId, setSelectedAttributeId] = useState(null);
   const [open, setOpen] = useState(false);
+
+  const handleDelete = () => {
+    deleteAttribute(selectedAttributeId);
+    setSelectedAttributeId(null);
+    setOpen(false);
+  };
 
   return (
     <>
@@ -85,39 +92,13 @@ export default function Attributes() {
         </Table>
       </Paper>
 
-      <Dialog
+      <ConfirmDialog
         open={open}
-        onClose={() => setOpen(false)}
-      >
-        <DialogTitle>
-          Delete Attribute
-        </DialogTitle>
-
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this attribute?
-            This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
-
-          <Button
-            color="error"
-            variant="contained"
-            onClick={() => {
-              deleteAttribute(selectedAttributeId);
-              setSelectedAttributeId(null);
-              setOpen(false);
-            }}
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        title="Delete Attribute"
+        message="Are you sure you want to delete this attribute? This action cannot be undone."
+        onCancel={() => setOpen(false)}
+        onConfirm={handleDelete}
+      />
     </>
   );
 }

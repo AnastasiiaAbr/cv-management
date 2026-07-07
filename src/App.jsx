@@ -1,15 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Positions from "./pages/Positions";
-import CVs from "./pages/CVs";
+import Positions from "./pages/positions/Positions";
+import CVs from "./pages/CVs/CVs";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
-import PositionDetails from "./pages/PositionDetails";
-import CreatePosition from "./pages/CreatePositions";
-import CreateAttribute from "./pages/CreateAttribute";
-import EditAttribute from "./pages/EditAttribute";
-import EditPosition from "./pages/EditPositions";
-import Attributes from "./pages/Attributes";
+import PositionDetails from "./pages/positions/PositionDetails";
+import CreatePosition from "./pages/positions/CreatePositions";
+import CreateAttribute from "./pages/attributes/createAttribute";
+import EditAttribute from "./pages/attributes/EditAttribute";
+import EditPosition from "./pages/positions/EditPositions";
+import Attributes from "./pages/attributes/Attributes";
 
 function App() {
   return (
