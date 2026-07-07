@@ -7,67 +7,19 @@ const initialPositions = [
     id: 1,
     title: "Meow",
     description: "Professional cat",
-    attributes: [
-      {
-        id: 1,
-        name: 'Sleep',
-        type: 'select',
-      },
-      {
-        id: 2,
-        name: "Purr",
-        type: 'select',
-      },
-      {
-        id: 3,
-        name: "Catch mice",
-        type: 'select'
-      }
-    ],
+    attributeIds: [1, 2],
   },
   {
     id: 2,
     title: "CattyCat",
     description: "The best cat",
-    attributes: [
-      {
-        id: 1,
-        name: 'Jump',
-        type: 'select',
-      },
-      {
-        id: 2,
-        name: "Play",
-        type: 'select',
-      },
-      {
-        id: 3,
-        name: "Eat",
-        type: 'select'
-      }
-    ],
+    attributeIds: [2, 3],
   },
   {
     id: 3,
     title: "MeowMeowMeow",
     description: "Very loud cat",
-    attributes: [
-      {
-        id: 1,
-        name: 'Meow',
-        type: 'select',
-      },
-      {
-        id: 2,
-        name: "Run",
-        type: 'select',
-      },
-      {
-        id: 3,
-        name: "Scratch",
-        type: 'select'
-      }
-    ],
+    attributeIds: [1,3],
   },
 ];
 
@@ -79,7 +31,7 @@ export function PositionProvider({ children }) {
       ...prevPositions,
       {
         id: Date.now(),
-        attributes: [],
+        attributeIds: [],
         ...newPosition,
       }
     ])

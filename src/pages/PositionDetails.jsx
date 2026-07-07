@@ -3,14 +3,17 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { usePositions } from "../context/PositionContext";
 import EditIcon from '@mui/icons-material/Edit';
 import { useState } from "react";
+import { useAttributes } from "../context/AttributeContext";
 
 
 export default function PositionDetails() {
+  const { attributes } = useAttributes();
   const { id } = useParams();
   const { getPositionById, deletePosition } = usePositions();
-  const position = getPositionById(id);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  const position = getPositionById(id);
 
   if (!position) {
     return (
@@ -19,6 +22,9 @@ export default function PositionDetails() {
       </Typography>
     );
   };
+
+  const selectedAttributes = attributes.filter((attribute) =>
+    position.attributeIds.includes(attribute.id));
 
   const handleDelete = () => {
     deletePosition(id);
@@ -58,16 +64,8 @@ export default function PositionDetails() {
               Attributes
             </Typography>
 
-            <Button
-              variant="contained"
-              component={Link}
-              to={`/positions/${id}/profile`}
-            >
-              Candidate Profile
-            </Button>
-
             <List>
-              {position.attributes.map((attribute) => (
+              {selectedAttributes.map((attribute) => (
                 <ListItem key={attribute.id}
                   secondaryAction={
                     <Chip
@@ -93,13 +91,6 @@ export default function PositionDetails() {
               to={`/positions/${id}/edit`}
               startIcon={<EditIcon />}>
               Edit
-            </Button>
-
-            <Button
-              variant='contained'
-              component={Link}
-              to={`/positions/${id}/attributes`}>
-              Manage Attributes
             </Button>
 
             <Button
