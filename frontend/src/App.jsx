@@ -10,6 +10,8 @@ import CreateAttribute from "./pages/attributes/createAttribute";
 import EditAttribute from "./pages/attributes/EditAttribute";
 import EditPosition from "./pages/positions/EditPositions";
 import Attributes from "./pages/attributes/Attributes";
+import Register from "./pages/Register";
+import Login from "./pages/login";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path='/login' element={<Login />} />
           <Route path='/positions' element={<Positions />} />
           <Route path='/positions/:id' element={<PositionDetails />} />
           <Route path='/positions/new' element={<CreatePosition/>} />
