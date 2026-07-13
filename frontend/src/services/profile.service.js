@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://cv-management-back.onrender.com/";
 
 export const getProfile = async () => {
   const token = localStorage.getItem("token");
