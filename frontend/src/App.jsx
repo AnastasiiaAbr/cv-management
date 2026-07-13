@@ -12,6 +12,7 @@ import EditPosition from "./pages/positions/EditPositions";
 import Attributes from "./pages/attributes/Attributes";
 import Register from "./pages/Register";
 import Login from "./pages/login";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/profile' element={<Profile />} />
           <Route path='/positions' element={<Positions />} />
           <Route path='/positions/:id' element={<PositionDetails />} />
           <Route path='/positions/new' element={<CreatePosition/>} />
