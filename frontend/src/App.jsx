@@ -11,7 +11,7 @@ import EditAttribute from "./pages/attributes/EditAttribute";
 import EditPosition from "./pages/positions/EditPositions";
 import Attributes from "./pages/attributes/Attributes";
 import Register from "./pages/Register";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 
 function App() {
