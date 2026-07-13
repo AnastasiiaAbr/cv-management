@@ -1,7 +1,7 @@
 const API_URL = 'https://cv-management-back.onrender.com/';
 
 export const registerUser = async (email, password) => {
-  const response = await fetch(`${API_URL}/auth/register`, {
+  const response = await fetch(`${API_URL}auth/register`, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
@@ -22,7 +22,7 @@ export const registerUser = async (email, password) => {
 };
 
 export const loginUser = async (email, password) => {
-  const response = await fetch(`${API_URL}/auth/login`, {
+  const response = await fetch(`${API_URL}auth/login`, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
