@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { loginUser } from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -20,6 +21,7 @@ export default function Login() {
     severity: "success",
   });
   const navigate = useNavigate();
+  const {login} = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +29,7 @@ export default function Login() {
     try {
       const data = await loginUser(email, password);
 
-      localStorage.setItem('token', data.token);
+      login(data.token);
       setSnackbar({
         open: true,
         message: 'Login successful',
