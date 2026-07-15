@@ -3,6 +3,8 @@ import cors from 'cors';
 
 import authRoutes from './routes/auth.routes.js'
 import profileRoutes from './routes/profile.routes.js';
+import categoryRoutes from './routes/category.routes.js';
+import attributeRoutes from './routes/attribute.routes.js';
 
 const app = express();
 
@@ -12,6 +14,10 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 
 app.use('/profile', profileRoutes);
+
+app.use('/categories', categoryRoutes);
+
+app.use("/attributes", attributeRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({
