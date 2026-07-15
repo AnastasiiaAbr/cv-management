@@ -4,8 +4,9 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ConfirmDialog from "../../components/common/ConfirmDialog";
+
 
 import { useAttributes } from "../../context/AttributeContext";
 
@@ -82,7 +83,7 @@ export default function Attributes() {
                 onClick={() => setSelectedAttributeId(attribute.id)}
                 sx={{ cursor: "pointer" }}
               >
-                <TableCell>{attribute.category}</TableCell>
+                <TableCell>{attribute.category.name}</TableCell>
                 <TableCell>{attribute.name}</TableCell>
                 <TableCell>{attribute.type}</TableCell>
                 <TableCell>{attribute.description}</TableCell>

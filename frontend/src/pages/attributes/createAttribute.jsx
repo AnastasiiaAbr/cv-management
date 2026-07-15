@@ -7,9 +7,13 @@ export default function CreateAttribute() {
   const navigate = useNavigate();
   const { addAttribute } = useAttributes();
 
-  const handleSubmit = (newAttribute) => {
-    addAttribute(newAttribute);
-    navigate("/attributes");
+  const handleSubmit = async (newAttribute) => {
+    try {
+      await addAttribute(newAttribute);
+      navigate("/attributes");
+    } catch (error) {
+      console.error("Failed to create attribute:", error);
+    }
   };
 
   return (

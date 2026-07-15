@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   MenuItem,
@@ -7,63 +7,110 @@ import {
   TextField,
 } from "@mui/material";
 
+import { getCategories } from "../../services/category.service";
+
 const ATTRIBUTE_TYPES = [
-  "text",
-  "number",
-  "select",
-  "date",
-  "boolean",
+  "STRING",
+  "TEXT",
+  "IMAGE",
+  "NUMERIC",
+  "DATE",
+  "PERIOD",
+  "BOOLEAN",
+  "ONE_OF_MANY",
 ];
 
 export default function AttributeForm({
   initialValues = {
-    category: "",
+    categoryId: "",
     name: "",
     description: "",
-    type: "text",
+    type: "STRING",
   },
   onSubmit,
   submitLabel,
 }) {
-  const [category, setCategory] = useState(initialValues.category);
-  const [name, setName] = useState(initialValues.name);
-  const [description, setDescription] = useState(initialValues.description);
-  const [type, setType] = useState(initialValues.type);
+  const [categories, setCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState(
+    initialValues.categoryId || ""
+  );
+  const [name, setName] = useState(initialValues.name || "");
+  const [description, setDescription] = useState(
+    initialValues.description || ""
+  );
+  const [type, setType] = useState(
+    initialValues.type || "STRING"
+  );
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error(
+          "Failed to load categories:",
+          error
+        );
+      }
+    };
+
+    loadCategories();
+  }, []);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!name.trim()) {
+    if (!name.trim() || !categoryId || !type) {
       return;
     }
 
-    onSubmit({
-      category,
-      name,
-      description,
+    await onSubmit({
+      categoryId: Number(categoryId),
+      name: name.trim(),
+      description: description.trim(),
       type,
     });
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 4 }}>
+    <Paper
+      elevation={3}
+      sx={{
+        p: 4,
+      }}
+    >
       <Stack
         component="form"
         spacing={3}
         onSubmit={handleSubmit}
       >
         <TextField
+          select
           label="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={categoryId}
+          onChange={(event) =>
+            setCategoryId(event.target.value)
+          }
           required
           fullWidth
-        />
+        >
+          {categories.map((category) => (
+            <MenuItem
+              key={category.id}
+              value={category.id}
+            >
+              {category.name}
+            </MenuItem>
+          ))}
+        </TextField>
 
         <TextField
           label="Attribute Name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(event) =>
+            setName(event.target.value)
+          }
           required
           fullWidth
         />
@@ -71,7 +118,9 @@ export default function AttributeForm({
         <TextField
           label="Description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(event) =>
+            setDescription(event.target.value)
+          }
           multiline
           rows={3}
           fullWidth
@@ -81,15 +130,18 @@ export default function AttributeForm({
           select
           label="Attribute Type"
           value={type}
-          onChange={(e) => setType(e.target.value)}
+          onChange={(event) =>
+            setType(event.target.value)
+          }
+          required
           fullWidth
         >
-          {ATTRIBUTE_TYPES.map((type) => (
+          {ATTRIBUTE_TYPES.map((attributeType) => (
             <MenuItem
-              key={type}
-              value={type}
+              key={attributeType}
+              value={attributeType}
             >
-              {type}
+              {attributeType}
             </MenuItem>
           ))}
         </TextField>

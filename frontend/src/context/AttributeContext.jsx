@@ -1,9 +1,29 @@
-import { createContext, useContext, useState } from "react";
-import initialAttributes from "../data/attributes";
+import { createContext, useContext, useState, useEffect } from "react";
 const AttributeContext = createContext();
+import { getAttributes, createAttribute } from "../services/attribute.service";
+import { useAuth } from "./AuthContext";
 
 export function AttributeProvider({ children }) {
-  const [attributes, setAttributes] = useState(initialAttributes);
+  const [attributes, setAttributes] = useState([]);
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setAttributes([]);
+      return;
+    }
+
+    const loadAttributes = async () => {
+      try {
+        const data = await getAttributes();
+        setAttributes(data);
+      } catch (error) {
+        console.error("Failed to load attributes:", error);
+      }
+    };
+
+    loadAttributes();
+  }, [isAuthenticated]);
 
   const getAttributeById = (id) => {
     return attributes.find(
@@ -11,16 +31,17 @@ export function AttributeProvider({ children }) {
     );
   };
 
-  const addAttribute = (newAttribute) => {
+  const addAttribute = async (newAttribute) => {
+    const createdAttribute = await createAttribute(newAttribute);
+
     setAttributes((prevAttributes) => [
       ...prevAttributes,
-      {
-        id: Date.now(),
-        ...newAttribute,
-      },
+      createdAttribute,
     ]);
-  };
 
+    return createdAttribute;
+  };
+  
   const updateAttribute = (id, updatedAttribute) => {
     setAttributes((prevAttributes) =>
       prevAttributes.map((attribute) =>
