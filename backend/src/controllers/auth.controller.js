@@ -2,12 +2,6 @@ import bcrypt from 'bcrypt';
 import prisma from '../prisma/prisma.js';
 import jwt from 'jsonwebtoken';
 
-export const test = (req, res) => {
-  res.status(200).json({
-    message: "Auth controller works!",
-  });
-};
-
 export const register = async (req, res) => {
   try {
     const { email, password } = req.body;
