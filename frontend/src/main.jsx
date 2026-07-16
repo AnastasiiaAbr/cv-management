@@ -7,17 +7,19 @@ import { ThemeProvider } from '@mui/material';
 import theme from './theme/theme.js';
 import { AttributeProvider } from './context/AttributeContext.jsx'
 import { AuthProvider } from './context/AuthContext.jsx';
-
+import { CategoryProvider } from './context/CategoryContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <AuthProvider>
-      <AttributeProvider>
-        <PositionProvider>
-          <App />
-        </PositionProvider>
-      </AttributeProvider>
+        <CategoryProvider>
+          <AttributeProvider>
+            <PositionProvider>
+              <App />
+            </PositionProvider>
+          </AttributeProvider>
+        </CategoryProvider>
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>

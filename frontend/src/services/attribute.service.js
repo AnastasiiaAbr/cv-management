@@ -40,3 +40,43 @@ export const createAttribute = async (attributeData) => {
 
   return data;
 };
+
+export const updateAttribute = async (id, attributeData) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API_URL}/attributes/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(attributeData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to update attribute");
+  }
+
+  return data;
+};
+
+export const deleteAttribute = async (id) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API_URL}/attributes/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to delete attribute");
+  }
+
+  return data;
+};

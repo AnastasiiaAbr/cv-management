@@ -18,14 +18,27 @@ export default function EditAttribute() {
     return <div>Attribute not found</div>;
   }
 
+  const initialValues = {
+    categoryId: attribute.category.id,
+    name: attribute.name,
+    description: attribute.description,
+    type: attribute.type,
+  };
+
+  const handleSubmit = async (updatedAttribute) => {
+    try {
+      await updateAttribute(id, updatedAttribute);
+      navigate("/attributes");
+    } catch (error) {
+      console.error("Failed to update attribute:", error);
+    }
+  };
+
   return (
     <AttributeForm
-      initialValues={attribute}
+      initialValues={initialValues}
       submitLabel="Save Changes"
-      onSubmit={(updatedAttribute) => {
-        updateAttribute(id, updatedAttribute);
-        navigate("/attributes");
-      }}
+      onSubmit={handleSubmit}
     />
   );
 }

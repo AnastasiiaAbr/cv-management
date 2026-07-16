@@ -58,6 +58,13 @@ export default function AttributeForm({
     loadCategories();
   }, []);
 
+  useEffect(() => {
+    setCategoryId(initialValues.categoryId || "");
+    setName(initialValues.name || "");
+    setDescription(initialValues.description || "");
+    setType(initialValues.type || "STRING");
+  }, [initialValues]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 

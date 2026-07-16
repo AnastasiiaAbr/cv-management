@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 const AttributeContext = createContext();
-import { getAttributes, createAttribute } from "../services/attribute.service";
+import { getAttributes, createAttribute, updateAttribute as updateAttributeRequest, deleteAttribute as deleteAttributeRequest } from "../services/attribute.service";
 import { useAuth } from "./AuthContext";
 
 export function AttributeProvider({ children }) {
@@ -41,18 +41,27 @@ export function AttributeProvider({ children }) {
 
     return createdAttribute;
   };
-  
-  const updateAttribute = (id, updatedAttribute) => {
+
+  const updateAttribute = async (id, updatedAttribute) => {
+    const attribute = await updateAttributeRequest(
+      id,
+      updatedAttribute
+    );
+
     setAttributes((prevAttributes) =>
-      prevAttributes.map((attribute) =>
-        attribute.id === Number(id)
-          ? { ...attribute, ...updatedAttribute }
-          : attribute
+      prevAttributes.map((item) =>
+        item.id === Number(id)
+          ? attribute
+          : item
       )
     );
+
+    return attribute;
   };
 
-  const deleteAttribute = (id) => {
+  const deleteAttribute = async (id) => {
+    await deleteAttributeRequest(id);
+
     setAttributes((prevAttributes) =>
       prevAttributes.filter(
         (attribute) => attribute.id !== Number(id)
