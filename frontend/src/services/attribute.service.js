@@ -1,82 +1,21 @@
-const API_URL = (
-  import.meta.env.VITE_API_URL || "http://localhost:3000"
-).replace(/\/+$/, "");
+import { apiRequest } from "./api";
 
-export const getAttributes = async () => {
-  const token = localStorage.getItem("token");
+export const getAttributes = () =>
+  apiRequest("/attributes");
 
-  const response = await fetch(`${API_URL}/attributes`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Failed to load attributes");
-  }
-
-  return data;
-};
-
-export const createAttribute = async (attributeData) => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(`${API_URL}/attributes`, {
+export const createAttribute = (attribute) =>
+  apiRequest("/attributes", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(attributeData),
+    body: JSON.stringify(attribute),
   });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Failed to create attribute");
-  }
-
-  return data;
-};
-
-export const updateAttribute = async (id, attributeData) => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(`${API_URL}/attributes/${id}`, {
+export const updateAttribute = (id, attribute) =>
+  apiRequest(`/attributes/${id}`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(attributeData),
+    body: JSON.stringify(attribute),
   });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Failed to update attribute");
-  }
-
-  return data;
-};
-
-export const deleteAttribute = async (id) => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(`${API_URL}/attributes/${id}`, {
+export const deleteAttribute = (id) =>
+  apiRequest(`/attributes/${id}`, {
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Failed to delete attribute");
-  }
-
-  return data;
-};

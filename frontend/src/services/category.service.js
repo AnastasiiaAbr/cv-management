@@ -1,21 +1,4 @@
-const API_URL = (
-  import.meta.env.VITE_API_URL || "http://localhost:3000"
-).replace(/\/+$/, "");
+import { apiRequest } from "./api";
 
-export const getCategories = async () => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(`${API_URL}/categories`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Failed to load categories");
-  }
-
-  return data;
-};
+export const getCategories = () =>
+  apiRequest("/categories");

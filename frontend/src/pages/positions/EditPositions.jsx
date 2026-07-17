@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 
 import PositionForm from "../../components/PositionForm";
@@ -7,20 +9,40 @@ export default function EditPosition() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { getPositionById, updatePosition } = usePositions();
+  const {
+    getPositionById,
+    editPosition,
+  } = usePositions();
 
-  const position = getPositionById(id);
+  const [position, setPosition] = useState(null);
+
+  useEffect(() => {
+    loadPosition();
+  }, [id]);
+
+  const loadPosition = async () => {
+    try {
+      const data = await getPositionById(id);
+      setPosition(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (!position) {
-    return <div>Position not found</div>;
+    return <Typography>Loading...</Typography>;
   }
 
   return (
     <PositionForm
-      initialValues={position}
+      initialValues={{
+        title: position.title,
+        description: position.description,
+        attributeIds: position.attributes.map((attribute) => attribute.id),
+      }}
       submitLabel="Save Changes"
-      onSubmit={(updatedPosition) => {
-        updatePosition(id, updatedPosition);
+      onSubmit={async (updatedPosition) => {
+        await editPosition(id, updatedPosition);
         navigate(`/positions/${id}`);
       }}
     />

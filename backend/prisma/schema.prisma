@@ -44,6 +44,8 @@ model Attribute {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  positions   Position[]
 }
 
 
@@ -54,4 +56,6 @@ model Position {
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  attributes    Attribute[]
 }

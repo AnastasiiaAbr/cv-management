@@ -1,124 +1,193 @@
-import { Chip, Paper, Typography, List, ListItem, ListItemText, Button, Divider, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { usePositions } from "../../context/PositionContext";
-import EditIcon from '@mui/icons-material/Edit';
-import { useState } from "react";
-import { useAttributes } from "../../context/AttributeContext";
-import ConfirmDialog from "../../components/common/ConfirmDialog";
+import { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Paper,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
+import ConfirmDialog from "../../components/common/ConfirmDialog";
+import ManageAttributes from "../../components/attributes/ManageAttributes";
+import { usePositions } from "../../context/PositionContext";
 
 export default function PositionDetails() {
-  const { attributes } = useAttributes();
   const { id } = useParams();
-  const { getPositionById, deletePosition } = usePositions();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
 
-  const position = getPositionById(id);
+  const {
+    getPositionById,
+    updatePositionAttributes,
+    removePosition,
+  } = usePositions();
+
+  const [position, setPosition] = useState(null);
+  const [tab, setTab] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    loadPosition();
+  }, [id]);
+
+  const loadPosition = async () => {
+    try {
+      const data = await getPositionById(id);
+      setPosition(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSaveAttributes = async (attributeIds) => {
+    try {
+      await updatePositionAttributes(position.id, attributeIds);
+
+      const updatedPosition = await getPositionById(position.id);
+      setPosition(updatedPosition);
+
+      setDialogOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    await removePosition(Number(id));
+    navigate("/positions");
+  };
 
   if (!position) {
-    return (
-      <Typography variant="h4">
-        Position not found
-      </Typography>
-    );
-  };
-
-  const selectedAttributes = attributes.filter((attribute) =>
-    position.attributeIds.includes(attribute.id));
-
-  const handleDelete = () => {
-    deletePosition(id);
-    navigate('/positions');
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+    return <Typography>Loading...</Typography>;
   }
 
   return (
     <>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Stack spacing={3}>
+      <Paper sx={{ p: 4 }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
           <Typography variant="h4">
             {position.title}
           </Typography>
 
-          <Divider />
+          <Stack direction="row" spacing={2}>
+            <Button
+              variant="contained"
+              startIcon={<EditIcon />}
+              component={Link}
+              to={`/positions/${id}/edit`}
+            >
+              Edit
+            </Button>
 
-          <div>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => setOpen(true)}
+            >
+              Delete
+            </Button>
+          </Stack>
+        </Stack>
+
+        <Divider sx={{ mb: 3 }} />
+
+        <Tabs
+          value={tab}
+          onChange={(e, value) => setTab(value)}
+          sx={{ mb: 3 }}
+        >
+          <Tab label="General" />
+          <Tab label="Attributes" />
+          <Tab label="Discussion" />
+        </Tabs>
+
+        {tab === 0 && (
+          <Box>
             <Typography variant="h6" gutterBottom>
               Description
             </Typography>
 
             <Typography color="text.secondary">
-              {position.description}
+              {position.description || "No description"}
             </Typography>
-          </div>
+          </Box>
+        )}
 
-          <div>
-            <Typography variant="h6" gutterBottom>
-              Attributes
-            </Typography>
-
-            <List>
-              {selectedAttributes.map((attribute) => (
-                <ListItem key={attribute.id}
-                  secondaryAction={
-                    <Chip
-                      label={attribute.type}
-                      color='primary'
-                      variant="outlined"
-                      size='small'
-                    />
-                  }
-                >
-                  <ListItemText
-                    primary={attribute.name}
+        {tab === 1 && (
+          <Box>
+            {position.attributes.length === 0 ? (
+              <Typography color="text.secondary">
+                No attributes assigned.
+              </Typography>
+            ) : (
+              <Stack
+                direction="row"
+                spacing={1}
+                useFlexGap
+                flexWrap="wrap"
+              >
+                {position.attributes.map((attribute) => (
+                  <Chip
+                    key={attribute.id}
+                    label={attribute.name}
+                    color="primary"
+                    variant="outlined"
                   />
-                </ListItem>
-              ))}
-            </List>
-          </div>
+                ))}
+              </Stack>
+            )}
 
-          <Stack direction='row' spacing={2}>
             <Button
+              sx={{ mt: 3 }}
               variant="contained"
-              component={Link}
-              to={`/positions/${id}/edit`}
-              startIcon={<EditIcon />}>
-              Edit
-            </Button>
-
-            <Button
-              color='error'
-              variant="contained"
-              onClick={handleOpen}>
-              Delete
-            </Button>
-
-            <Button
-              variant='outlined'
-              component={Link}
-              to="/positions"
-              sx={{ alignSelf: "flex-start" }}
+              onClick={() => setDialogOpen(true)}
             >
-              Back to Positions
+              Manage Attributes
             </Button>
-          </Stack>
-        </Stack>
+          </Box>
+        )}
+
+        {tab === 2 && (
+          <Typography color="text.secondary">
+            Discussion will be implemented later.
+          </Typography>
+        )}
+
+        <Box mt={4}>
+          <Button
+            variant="outlined"
+            component={Link}
+            to="/positions"
+          >
+            Back to Positions
+          </Button>
+        </Box>
       </Paper>
 
       <ConfirmDialog
         open={open}
         title="Delete Position"
-        message="Are you sure you want to delete this position? This action cannot be undone."
-        onCancel={handleClose}
+        message="Are you sure you want to delete this position?"
+        onCancel={() => setOpen(false)}
         onConfirm={handleDelete}
+      />
+
+      <ManageAttributes
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        position={position}
+        onSave={handleSaveAttributes}
       />
     </>
   );

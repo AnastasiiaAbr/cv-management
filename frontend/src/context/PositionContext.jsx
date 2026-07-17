@@ -1,75 +1,86 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import {
+  getPositions,
+  getPositionById,
+  createPosition,
+  updatePosition,
+  updatePositionAttributes,
+  deletePosition,
+} from "../services/position.service";
 
 const PositionContext = createContext();
 
-const initialPositions = [
-  {
-    id: 1,
-    title: "Meow",
-    description: "Professional cat",
-    attributeIds: [1, 2],
-  },
-  {
-    id: 2,
-    title: "CattyCat",
-    description: "The best cat",
-    attributeIds: [2, 3],
-  },
-  {
-    id: 3,
-    title: "MeowMeowMeow",
-    description: "Very loud cat",
-    attributeIds: [1,3],
-  },
-];
-
 export function PositionProvider({ children }) {
-  const [positions, setPositions] = useState(initialPositions);
+  const [positions, setPositions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const addPosition = (newPosition) => {
-    setPositions((prevPositions) => [
-      ...prevPositions,
-      {
-        id: Date.now(),
-        attributeIds: [],
-        ...newPosition,
-      }
-    ])
-  }
-  const getPositionById = (id) => {
-    return positions.find((position) => position.id === Number(id));
+  const loadPositions = async () => {
+    try {
+      const data = await getPositions();
+      setPositions(data);
+    } catch (error) {
+      console.error("Failed to load positions:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updatePosition = (id, updatedPosition) => {
-    setPositions((prevPositions) =>
-      prevPositions.map((position) =>
-        position.id === Number(id)
-          ? { ...position, ...updatedPosition }
-          : position
+  useEffect(() => {
+    loadPositions();
+  }, []);
+
+  const addPosition = async (positionData) => {
+    const newPosition = await createPosition(positionData);
+
+    setPositions((prev) => [...prev, newPosition]);
+
+    return newPosition;
+  };
+
+  const editPosition = async (id, positionData) => {
+    const updatedPosition = await updatePosition(id, positionData);
+
+    setPositions((prev) =>
+      prev.map((position) =>
+        position.id === id ? updatedPosition : position
       )
+    );
+
+    return updatedPosition;
+  };
+
+  const removePosition = async (id) => {
+    await deletePosition(id);
+
+    setPositions((prev) =>
+      prev.filter((position) => position.id !== id)
     );
   };
 
-  const deletePosition = (id) => {
-    setPositions((prevPositions) =>
-      prevPositions.filter((position) => position.id !== Number(id)))
-  };
-
-return (
-  <PositionContext.Provider
-    value={{
-      positions,
-      getPositionById,
-      addPosition,
-      updatePosition,
-      deletePosition,
-    }}
-  >
-    {children}
-  </PositionContext.Provider>
-);
+  return (
+    <PositionContext.Provider
+      value={{
+        positions,
+        loading,
+        loadPositions,
+        addPosition,
+        editPosition,
+        removePosition,
+        getPositionById,
+        updatePositionAttributes,
+      }}
+    >
+      {children}
+    </PositionContext.Provider>
+  );
 }
 
 export function usePositions() {
-  return useContext(PositionContext);
+  const context = useContext(PositionContext);
+
+  if (!context) {
+    throw new Error("usePositions must be used within PositionProvider");
+  }
+
+  return context;
 }
