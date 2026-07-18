@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  MenuItem,
-  Paper,
-  Stack,
-  TextField,
-} from "@mui/material";
+import {Button, MenuItem, Paper, Stack, TextField } from "@mui/material";
 
 import { getCategories } from "../../services/category.service";
 

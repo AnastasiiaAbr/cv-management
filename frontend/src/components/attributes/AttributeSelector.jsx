@@ -1,15 +1,5 @@
 import { useState } from "react";
-import {
-  Autocomplete,
-  Button,
-  Chip,
-  List,
-  ListItem,
-  Snackbar,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Autocomplete, Button, Chip, List, ListItem, Snackbar, Stack, TextField, Typography } from "@mui/material";
 
 import { useAttributes } from "../../context/AttributeContext";
 

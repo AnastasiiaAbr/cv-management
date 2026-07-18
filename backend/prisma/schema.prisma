@@ -8,12 +8,15 @@ datasource db {
 }
 
 model User {
-  id  Int @id @default(autoincrement())
-  email String @unique
-  password String
+  id    Int @id @default(autoincrement())
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  email   String   @unique
+  password    String
+
+  profile   Profile?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum AttributeType {
@@ -58,4 +61,28 @@ model Position {
   updatedAt   DateTime  @updatedAt
 
   attributes    Attribute[]
+}
+
+model Profile {
+  id    Int @id @default(autoincrement())
+
+  userId    Int   @unique
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  firstName   String
+  lastName    String
+
+  email   String?
+  phone   String?
+  
+  headline    String?
+  location    String?
+  linkedin    String?
+  github      String?
+  website     String?
+
+  summary   String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

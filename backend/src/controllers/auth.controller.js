@@ -4,11 +4,16 @@ import jwt from 'jsonwebtoken';
 
 export const register = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+    } = req.body;
 
-    if (!email || !password) {
+    if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({
-        message: "Email and password are required.",
+        message: "All fields are required.",
       });
     }
 
@@ -26,11 +31,22 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-      },
+    await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+        },
+      });
+
+      await tx.profile.create({
+        data: {
+          userId: user.id,
+          firstName,
+          lastName,
+          email,
+        },
+      });
     });
 
     return res.status(201).json({

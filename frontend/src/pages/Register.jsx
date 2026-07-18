@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -27,7 +29,12 @@ export default function Register() {
     }
 
     try {
-      await registerUser(email, password);
+      await registerUser({
+        firstName,
+        lastName,
+        email,
+        password,
+      });
 
       setSnackbar({
         open: true,
@@ -35,6 +42,8 @@ export default function Register() {
         severity: 'success',
       });
 
+      setFirstName('');
+      setLastName('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
@@ -67,6 +76,22 @@ export default function Register() {
           <Typography variant="h4">
             Register
           </Typography>
+
+          <TextField
+            label="First Name"
+            value={firstName}
+            required
+            onChange={(e) => setFirstName(e.target.value)}
+            fullWidth
+          />
+
+          <TextField
+            label="Last Name"
+            value={lastName}
+            required
+            onChange={(e) => setLastName(e.target.value)}
+            fullWidth
+          />
           <TextField
             label="Email"
             type="email"
