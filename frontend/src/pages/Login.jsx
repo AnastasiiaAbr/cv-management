@@ -8,6 +8,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import { LoadingButton } from '@mui/lab';
 import { loginUser } from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -20,11 +21,14 @@ export default function Login() {
     message: "",
     severity: "success",
   });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const {login} = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     try {
       const data = await loginUser(email, password);
@@ -40,7 +44,7 @@ export default function Login() {
         navigate("/profile");
       }, 1000);
     } catch (error) {
-      
+
       setSnackbar({
         open: true,
         message: error.message,
@@ -87,12 +91,14 @@ export default function Login() {
             fullWidth
           />
 
-          <Button
+          <LoadingButton
             type="submit"
             variant="contained"
+            loading={loading}
+            fullWidth
           >
             Login
-          </Button>
+          </LoadingButton>
         </Stack>
       </Paper>
       <Snackbar

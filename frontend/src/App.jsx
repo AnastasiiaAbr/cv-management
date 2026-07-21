@@ -14,30 +14,34 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/profile' element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>} />
-          <Route path='/positions' element={<Positions />} />
-          <Route path='/positions/:id' element={<PositionDetails />} />
-          <Route path='/positions/new' element={<CreatePosition />} />
-          <Route path='/positions/:id/edit' element={<EditPosition />} />
-          <Route path='/attributes/new' element={<CreateAttribute />} />
-          <Route path='/attributes' element={<Attributes />} />
-          <Route path='/attributes/:id/edit' element={<EditAttribute />} />
-          <Route path='/cvs' element={<CVs />} />
-        </Route>
 
-        <Route path='*' element={<NotFound />} />
+          <Route element={<PublicRoute />}>
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+          </Route>
+
+          <Route index element={<Home />} />
+          <Route path="positions" element={<Positions />} />
+          <Route path="positions/:id" element={<PositionDetails />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="profile" element={<Profile />} />
+            <Route path="cvs" element={<CVs />} />
+            <Route path="positions/new" element={<CreatePosition />} />
+            <Route path="positions/:id/edit" element={<EditPosition />} />
+            <Route path="attributes" element={<Attributes />} />
+            <Route path="attributes/new" element={<CreateAttribute />} />
+            <Route path="attributes/:id/edit" element={<EditAttribute />} />
+          </Route>
+
+        </Route>
       </Routes>
     </BrowserRouter>
   )

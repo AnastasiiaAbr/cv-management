@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Paper, Stack, TextField, Typography, Button, Snackbar, Alert } from '@mui/material';
 import { registerUser } from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 export default function Register() {
+  const [loading, setLoading] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -18,6 +20,8 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     if (password !== confirmPassword) {
       setSnackbar({
@@ -115,12 +119,14 @@ export default function Register() {
             required
             fullWidth
           />
-          <Button
-            type='submit'
-            variant='contained'
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            loading={loading}
+            fullWidth
           >
             Register
-          </Button>
+          </LoadingButton>
         </Stack>
       </Paper>
 

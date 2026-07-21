@@ -1,29 +1,45 @@
 const API_URL = import.meta.env.VITE_API_URL.replace(/\/+$/, "");
 
-export const getProfile = async () => {
-  const token = localStorage.getItem("token");
+const getToken = () => {
+  return localStorage.getItem('token');
+}
 
+export const getProfile = async () => {
   const response = await fetch(`${API_URL}/profile`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 
-  if (response.status === 401) {
-    localStorage.removeItem("token");
+  const result = await response.json();
 
-    const error = new Error("Unauthorized");
-    error.status = 401;
-
+  if (!response.ok) {
+    const error = new Error(result.message || "Failed to load profile");
+    error.status = response.status;
     throw error;
   }
 
-  const data = await response.json();
+  return result;
+};
+
+export const updateProfile = async (data) => {
+  const response = await fetch(`${API_URL}/profile`, {
+    method: 'PUT',
+    headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Failed to load profile");
+    const error = new Error(result.message || "Failed to update profile");
+    error.status = response.status;
+    throw error;
   }
 
-  return data;
-};
+  return result
+}

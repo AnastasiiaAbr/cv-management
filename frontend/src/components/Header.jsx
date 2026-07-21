@@ -5,33 +5,45 @@ export default function Header() {
   return (
     <AppBar position='static'>
       <Toolbar>
-        <Typography
-          variant='h6'
-          component='div'
-          sx={{ flexGrow: 1 }}
+        <Button
+          component={Link}
+          to="/"
+          color="inherit"
+          sx={{
+            flexGrow: 1,
+            justifyContent: "flex-start",
+            fontSize: "2rem",
+            fontWeight: 500,
+            textTransform: "none",
+          }}
         >
           CareerPortal
-        </Typography>
+        </Button>
         <Box>
           <Button
             color='inherit'
-            component={Link} to='/'>
-            Home
-          </Button>
-          <Button
-            color='inherit'
-            component={Link} to='/positions'>
+            component={Link} to='/positions'
+            sx={{
+              fontSize: '1.1rem'
+            }}
+          >
             Positions
           </Button>
           <Button
             color='inherit'
-            component={Link} to='/attributes'>
+            component={Link} to='/attributes'
+            sx={{
+              fontSize: '1.1rem'
+            }}>
             Attribute library
           </Button>
           <Button
             color='inherit'
-            component={Link} to='/cvs'>
-            CVs
+            component={Link} to='/profile'
+            sx={{
+              fontSize: '1.1rem'
+            }}>
+            Profile
           </Button>
         </Box>
       </Toolbar>
