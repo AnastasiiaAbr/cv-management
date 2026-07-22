@@ -6,6 +6,8 @@ import profileRoutes from './routes/profile.routes.js';
 import categoryRoutes from './routes/category.routes.js';
 import attributeRoutes from './routes/attribute.routes.js';
 import positionRoutes from './routes/position.routes.js';
+import cvRoutes from './routes/cv.routes.js';
+import userRoutes from "./routes/user.routes.js";
 
 const app = express();
 
@@ -21,6 +23,10 @@ app.use('/categories', categoryRoutes);
 app.use("/attributes", attributeRoutes);
 
 app.use('/positions', positionRoutes);
+
+app.use("/api/cvs", cvRoutes);
+
+app.use("/users", userRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({

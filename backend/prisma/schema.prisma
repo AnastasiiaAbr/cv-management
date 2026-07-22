@@ -7,12 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  CANDIDATE
+  RECRUITER
+  ADMIN
+}
+
 model User {
   id    Int @id @default(autoincrement())
 
   email   String   @unique
   password    String
-
+  
+  role    Role    @default(CANDIDATE)
   profile   Profile?
 
   createdAt  DateTime @default(now())
@@ -61,6 +68,10 @@ model Position {
   updatedAt   DateTime  @updatedAt
 
   attributes    Attribute[]
+
+  cvs CV[]
+
+  isPublic Boolean @default(true)
 }
 
 model Profile {
@@ -85,4 +96,22 @@ model Profile {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  cvs CV[]
+}
+
+model CV {
+  id    Int   @id @default(autoincrement())
+  title   String
+
+  profileId  Int
+  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  positionId Int
+  position   Position @relation(fields: [positionId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([profileId, positionId])
 }

@@ -15,6 +15,9 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import AdminRoute from "./components/AdminRoute";
+import AdminPage from "./pages/AdminPage";
+
 
 function App() {
   return (
@@ -39,6 +42,10 @@ function App() {
             <Route path="attributes" element={<Attributes />} />
             <Route path="attributes/new" element={<CreateAttribute />} />
             <Route path="attributes/:id/edit" element={<EditAttribute />} />
+          </Route>
+
+          <Route element={<AdminRoute />}>
+          <Route path='admin' element={<AdminPage/>}/>
           </Route>
 
         </Route>

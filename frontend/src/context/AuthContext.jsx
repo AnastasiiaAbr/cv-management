@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
+import { getCurrentUser } from "../services/user.service";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -7,20 +7,43 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const loadUser = async () => {
+      const token = localStorage.getItem("token");
 
-    if (token) {
-      setUser({ token });
-    }
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
-    setLoading(false);
+      try {
+        const currentUser = await getCurrentUser();
+
+        setUser({
+          token,
+          ...currentUser,
+        });
+      } catch (error) {
+        console.error(error);
+        localStorage.removeItem("token");
+        setUser(null);
+      }
+
+      setLoading(false);
+    };
+
+    loadUser();
   }, []);
 
-  const login = (token) => {
+  const login = async (token) => {
     localStorage.setItem("token", token);
-    setUser({ token });
-  };
 
+    const currentUser = await getCurrentUser();
+
+    setUser({
+      token,
+      ...currentUser,
+    });
+  };
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);

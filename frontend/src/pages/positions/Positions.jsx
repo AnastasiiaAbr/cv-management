@@ -1,7 +1,9 @@
-import { Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody,
-  Button, Box, Stack, TextField, Checkbox } from "@mui/material";
+import {
+  Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody,
+  Button, Box, Stack, TextField, Checkbox
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import ConfirmDialog from "../../components/common/ConfirmDialog";
@@ -13,6 +15,8 @@ export default function Positions() {
   const [selectedPositions, setSelectedPositions] = useState([]);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const filteredPositions = positions.filter((position) =>
     position.title.toLowerCase().includes(search.toLowerCase())
@@ -138,16 +142,17 @@ export default function Positions() {
           <TableBody>
             {filteredPositions.map((position) => (
               <TableRow
-                key={position.id}
                 hover
-                onClick={() => handleSelect(position.id)}
                 sx={{ cursor: "pointer" }}
+                onClick={() => navigate(`/positions/${position.id}`)}
               >
                 <TableCell padding="checkbox">
                   <Checkbox
                     checked={selectedPositions.includes(position.id)}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={() => handleSelect(position.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelect(position.id);
+                    }}
                   />
                 </TableCell>
 

@@ -97,6 +97,7 @@ export const login = async (req, res) => {
     {
       userId: user.id,
       email: user.email,
+      role: user.role,
     },
     process.env.JWT_SECRET,
     {
@@ -109,6 +110,30 @@ export const login = async (req, res) => {
     user: {
       id: user.id,
       email: user.email,
+      role: user.role,
     }
   })
 }
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.user.userId,
+      },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+      },
+    });
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};

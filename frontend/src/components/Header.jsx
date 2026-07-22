@@ -1,7 +1,10 @@
 import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
+  const { user } = useAuth();
+
   return (
     <AppBar position='static'>
       <Toolbar>
@@ -45,6 +48,18 @@ export default function Header() {
             }}>
             Profile
           </Button>
+          {user?.role === "ADMIN" && (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/admin"
+              sx={{
+                fontSize: "1.1rem",
+              }}
+            >
+              Admin
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

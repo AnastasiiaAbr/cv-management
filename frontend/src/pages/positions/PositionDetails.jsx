@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Chip, Divider, Paper, Stack, Tab, Tabs, Typography} from "@mui/material";
+import { Box, Button, Chip, Divider, Paper, Stack, Tab, Tabs, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -59,6 +59,10 @@ export default function PositionDetails() {
 
   return (
     <>
+      <Typography variant="h4" sx={{ mb: 3 }}>
+        Position Details
+      </Typography>
+
       <Paper sx={{ p: 4 }}>
         <Stack
           direction="row"
@@ -66,13 +70,13 @@ export default function PositionDetails() {
           alignItems="center"
           mb={3}
         >
-          <Typography variant="h4">
+          <Typography variant="h5" sx={{mr: 2}}>
             {position.title}
           </Typography>
 
           <Stack direction="row" spacing={2}>
             <Button
-              variant="contained"
+              variant="outlined"
               startIcon={<EditIcon />}
               component={Link}
               to={`/positions/${id}/edit`}
@@ -81,7 +85,7 @@ export default function PositionDetails() {
             </Button>
 
             <Button
-              variant="contained"
+              variant="outlined"
               color="error"
               onClick={() => setOpen(true)}
             >
@@ -108,7 +112,7 @@ export default function PositionDetails() {
               Description
             </Typography>
 
-            <Typography color="text.secondary">
+            <Typography color="text.secondary" sx={{mb: 2}}>
               {position.description || "No description"}
             </Typography>
           </Box>
@@ -139,7 +143,7 @@ export default function PositionDetails() {
             )}
 
             <Button
-              sx={{ mt: 3 }}
+              sx={{ mt: 3, mb: 3 }}
               variant="contained"
               onClick={() => setDialogOpen(true)}
             >
@@ -149,7 +153,7 @@ export default function PositionDetails() {
         )}
 
         {tab === 2 && (
-          <Typography color="text.secondary">
+          <Typography color="text.secondary" sx={{mb:2}}>
             Discussion will be implemented later.
           </Typography>
         )}

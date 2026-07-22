@@ -40,17 +40,17 @@ export const updateProfile = async (req, res) => {
 
     const profile = await prisma.profile.update({
       where: {
-        userId: req.user.userId, 
+        userId: req.user.userId,
       },
       data: {
-        firstName, 
-        lastName, 
+        firstName,
+        lastName,
         email,
-        phone, 
-        location, 
-        linkedin, 
-        github, 
-        website, 
+        phone,
+        location,
+        linkedin,
+        github,
+        website,
         summary,
       },
     });
