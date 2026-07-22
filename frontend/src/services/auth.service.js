@@ -1,7 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL.replace(/\/+$/, "");
 
 export const registerUser = async (data) => {
-  const response = await fetch(`${API_URL}auth/register`, {
+  const response = await fetch(`${API_URL}/auth/register`, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
@@ -19,7 +19,7 @@ export const registerUser = async (data) => {
 };
 
 export const loginUser = async (email, password) => {
-  const response = await fetch(`${API_URL}auth/login`, {
+  const response = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
