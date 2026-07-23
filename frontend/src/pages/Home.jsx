@@ -1,19 +1,22 @@
-import { Navigate, Link } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Link } from "react-router-dom";
+import { Box, Button, Card, CardContent, Container, Grid, Stack, Typography, Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import mainImg from '../../public/imgs/work.svg'
+
+import { usePositions } from "../context/PositionContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function HomePage() {
+  const { user } = useAuth();
+  const { positions } = usePositions();
+
+  const latestPositions = [...positions]
+    .sort((a, b) => b.id - a.id)
+    .slice(0, 5);
+
   return (
     <Box>
       <Container maxWidth="lg">
@@ -49,34 +52,72 @@ export default function HomePage() {
               tailored resumes for every position.
             </Typography>
 
-            <Stack
-              direction="row"
-              spacing={2}
-            >
-              <Button
-                component={Link}
-                to="/register"
-                variant="contained"
-                size="large"
-              >
-                Get Started
-              </Button>
+            {!user && (
+              <Stack direction="row" spacing={2}>
+                <Button
+                  component={Link}
+                  to="/register"
+                  variant="contained"
+                  size="large"
+                >
+                  Get Started
+                </Button>
 
-              <Button
-                component={Link}
-                to="/login"
-                variant="outlined"
-                size="large"
-              >
-                Sign In
-              </Button>
-            </Stack>
+                <Button
+                  component={Link}
+                  to="/login"
+                  variant="outlined"
+                  size="large"
+                >
+                  Sign In
+                </Button>
+              </Stack>
+            )}
+            <Card
+              sx={{
+                maxWidth: 500,
+                borderRadius: 3,
+                mt: 3
+              }}
+            >
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Latest Positions
+                </Typography>
+
+                {latestPositions.map((position) => (
+                  <Accordion key={position.id}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography>{position.title}</Typography>
+                    </AccordionSummary>
+
+                    <AccordionDetails>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 2 }}
+                      >
+                        {position.description}
+                      </Typography>
+
+                      <Button
+                        component={Link}
+                        to={`/positions/${position.id}`}
+                        size="small"
+                      >
+                        View Position
+                      </Button>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </CardContent>
+            </Card>
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
             <Box
               component="img"
-              src="../public/imgs/work.svg"
+              src={mainImg}
               alt="Career"
               sx={{
                 width: "100%",

@@ -32,14 +32,18 @@ export default function Header() {
           >
             Positions
           </Button>
-          <Button
-            color='inherit'
-            component={Link} to='/attributes'
-            sx={{
-              fontSize: '1.1rem'
-            }}>
-            Attribute library
-          </Button>
+          {(user?.role === "ADMIN" || user?.role === "RECRUITER") && (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/attributes"
+              sx={{
+                fontSize: "1.1rem",
+              }}
+            >
+              Attribute library
+            </Button>
+          )}
           <Button
             color='inherit'
             component={Link} to='/profile'

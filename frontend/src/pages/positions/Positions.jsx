@@ -5,18 +5,21 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 import ConfirmDialog from "../../components/common/ConfirmDialog";
 import { usePositions } from "../../context/PositionContext";
 
 export default function Positions() {
   const { positions, removePosition } = usePositions();
-
+  const { user } = useAuth();
   const [selectedPositions, setSelectedPositions] = useState([]);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
+  const isManager = user?.role === "ADMIN" || user?.role === "RECRUITER";
+
 
   const filteredPositions = positions.filter((position) =>
     position.title.toLowerCase().includes(search.toLowerCase())
@@ -68,43 +71,46 @@ export default function Positions() {
             sx={{ width: 250 }}
           />
 
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            component={Link}
-            to="/positions/new"
-          >
-            Add Position
-          </Button>
+          {isManager && (
+            <>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                component={Link}
+                to="/positions/new"
+              >
+                Add Position
+              </Button>
 
-          <Button
-            variant="outlined"
-            disabled={selectedPositions.length !== 1}
-            component={Link}
-            to={`/positions/${selectedPositions[0]}/edit`}
-          >
-            Edit
-          </Button>
+              <Button
+                variant="outlined"
+                disabled={selectedPositions.length !== 1}
+                component={Link}
+                to={`/positions/${selectedPositions[0]}/edit`}
+              >
+                Edit
+              </Button>
 
-          <Button
-            variant="outlined"
-            disabled={selectedPositions.length !== 1}
-            onClick={() => {
-              // TODO
-              console.log("Duplicate");
-            }}
-          >
-            Duplicate
-          </Button>
+              <Button
+                variant="outlined"
+                disabled={selectedPositions.length !== 1}
+                onClick={() => {
+                  console.log("Duplicate");
+                }}
+              >
+                Duplicate
+              </Button>
 
-          <Button
-            color="error"
-            variant="outlined"
-            disabled={selectedPositions.length === 0}
-            onClick={() => setOpen(true)}
-          >
-            Delete
-          </Button>
+              <Button
+                color="error"
+                variant="outlined"
+                disabled={selectedPositions.length === 0}
+                onClick={() => setOpen(true)}
+              >
+                Delete
+              </Button>
+            </>
+          )}
         </Stack>
       </Box>
 
@@ -112,27 +118,29 @@ export default function Positions() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={
-                    filteredPositions.length > 0 &&
-                    selectedPositions.length === filteredPositions.length
-                  }
-                  indeterminate={
-                    selectedPositions.length > 0 &&
-                    selectedPositions.length < filteredPositions.length
-                  }
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedPositions(
-                        filteredPositions.map((p) => p.id)
-                      );
-                    } else {
-                      setSelectedPositions([]);
+              {isManager && (
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={
+                      filteredPositions.length > 0 &&
+                      selectedPositions.length === filteredPositions.length
                     }
-                  }}
-                />
-              </TableCell>
+                    indeterminate={
+                      selectedPositions.length > 0 &&
+                      selectedPositions.length < filteredPositions.length
+                    }
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedPositions(
+                          filteredPositions.map((p) => p.id)
+                        );
+                      } else {
+                        setSelectedPositions([]);
+                      }
+                    }}
+                  />
+                </TableCell>
+              )}
 
               <TableCell>Title</TableCell>
               <TableCell>Description</TableCell>
@@ -146,15 +154,17 @@ export default function Positions() {
                 sx={{ cursor: "pointer" }}
                 onClick={() => navigate(`/positions/${position.id}`)}
               >
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedPositions.includes(position.id)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelect(position.id);
-                    }}
-                  />
-                </TableCell>
+                {isManager && (
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={selectedPositions.includes(position.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelect(position.id);
+                      }}
+                    />
+                  </TableCell>
+                )}
 
                 <TableCell>
                   {position.title}
