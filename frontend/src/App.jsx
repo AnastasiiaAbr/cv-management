@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Positions from "./pages/positions/Positions";
-import CVs from "./pages/CVs/CVs";
+import CVs from "./pages/CVs/CreateCV";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import PositionDetails from "./pages/positions/PositionDetails";
@@ -17,6 +17,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import AdminRoute from "./components/AdminRoute";
 import AdminPage from "./pages/AdminPage";
+import CreateCV from "./pages/CVs/CreateCV";
+import CVDetails from "./pages/CVs/CVDetails";
 
 
 function App() {
@@ -39,6 +41,8 @@ function App() {
             <Route path="cvs" element={<CVs />} />
             <Route path="positions/new" element={<CreatePosition />} />
             <Route path="positions/:id/edit" element={<EditPosition />} />
+            <Route path='positions/:id/cv/new' element={<CreateCV />} />
+            <Route path='cvs/:id' element={<CVDetails />}/>
             <Route path="attributes" element={<Attributes />} />
             <Route path="attributes/new" element={<CreateAttribute />} />
             <Route path="attributes/:id/edit" element={<EditAttribute />} />

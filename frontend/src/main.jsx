@@ -8,6 +8,7 @@ import theme from './theme/theme.js';
 import { AttributeProvider } from './context/AttributeContext.jsx'
 import { AuthProvider } from './context/AuthContext.jsx';
 import { CategoryProvider } from './context/CategoryContext.jsx'
+import { CVProvider } from './context/CVContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -16,7 +17,9 @@ createRoot(document.getElementById('root')).render(
         <CategoryProvider>
           <AttributeProvider>
             <PositionProvider>
+              <CVProvider>
               <App />
+              </CVProvider>
             </PositionProvider>
           </AttributeProvider>
         </CategoryProvider>

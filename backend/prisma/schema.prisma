@@ -7,23 +7,96 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  role      Role     @default(CANDIDATE)
+  profile   Profile?
+}
+
+model Category {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  attributes Attribute[]
+}
+
+model Attribute {
+  id          Int                @id @default(autoincrement())
+  name        String             @unique
+  description String?
+  type        AttributeType
+  categoryId  Int
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  category    Category           @relation(fields: [categoryId], references: [id])
+  values      CVAttributeValue[]
+  positions   Position[]         @relation("AttributeToPosition")
+}
+
+model Position {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  isPublic    Boolean     @default(true)
+  cvs         cv[]
+  attributes  Attribute[] @relation("AttributeToPosition")
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  firstName String
+  lastName  String
+  email     String?
+  phone     String?
+  headline  String?
+  location  String?
+  linkedin  String?
+  github    String?
+  website   String?
+  summary   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cvs       cv[]
+}
+
+model cv {
+  id              Int                @id @default(autoincrement())
+  title           String
+  profileId       Int
+  positionId      Int
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  attributeValues CVAttributeValue[]
+  position        Position           @relation(fields: [positionId], references: [id])
+  profile         Profile            @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, positionId])
+}
+
+model CVAttributeValue {
+  id          Int       @id @default(autoincrement())
+  cvId        Int
+  attributeId Int
+  value       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  attribute   Attribute @relation(fields: [attributeId], references: [id])
+  cv          cv        @relation(fields: [cvId], references: [id], onDelete: Cascade)
+
+  @@unique([cvId, attributeId])
+}
+
 enum Role {
   CANDIDATE
   RECRUITER
   ADMIN
-}
-
-model User {
-  id    Int @id @default(autoincrement())
-
-  email   String   @unique
-  password    String
-  
-  role    Role    @default(CANDIDATE)
-  profile   Profile?
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
 }
 
 enum AttributeType {
@@ -35,83 +108,4 @@ enum AttributeType {
   PERIOD
   BOOLEAN
   ONE_OF_MANY
-}
-
-model Category {
-  id  Int @id @default(autoincrement())
-  name  String  @unique
-  attributes Attribute[]
-}
-
-model Attribute {
-  id  Int  @id @default(autoincrement())
-  name  String  @unique
-  description String?
-  type  AttributeType
-
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  positions   Position[]
-}
-
-
-model Position {
-  id  Int   @id  @default(autoincrement())
-  title   String
-  description   String?
-
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  attributes    Attribute[]
-
-  cvs CV[]
-
-  isPublic Boolean @default(true)
-}
-
-model Profile {
-  id    Int @id @default(autoincrement())
-
-  userId    Int   @unique
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  firstName   String
-  lastName    String
-
-  email   String?
-  phone   String?
-  
-  headline    String?
-  location    String?
-  linkedin    String?
-  github      String?
-  website     String?
-
-  summary   String?
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  cvs CV[]
-}
-
-model CV {
-  id    Int   @id @default(autoincrement())
-  title   String
-
-  profileId  Int
-  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-  positionId Int
-  position   Position @relation(fields: [positionId], references: [id])
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@unique([profileId, positionId])
 }

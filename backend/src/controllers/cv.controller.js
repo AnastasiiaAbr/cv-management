@@ -2,7 +2,7 @@ import prisma from "../prisma/prisma.js";
 
 export const getCVs = async (req, res) => {
   try {
-    const cvs = await prisma.cV.findMany({
+    const cvs = await prisma.cv.findMany({
       where: {
         profileId: req.user.profileId,
       },
@@ -28,7 +28,7 @@ export const getCVById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const cv = await prisma.cV.findFirst({
+    const cv = await prisma.cv.findFirst({
       where: {
         id: Number(id),
         profileId: req.user.profileId,
@@ -56,9 +56,12 @@ export const getCVById = async (req, res) => {
 
 export const createCV = async (req, res) => {
   try {
-    const { title, positionId } = req.body;
 
-    const existingCV = await prisma.cV.findUnique({
+        console.log("USER:", req.user);
+    console.log("BODY:", req.body);
+    const { title, positionId, values = [] } = req.body;
+
+    const existingCV = await prisma.cv.findUnique({
       where: {
         profileId_positionId: {
           profileId: req.user.profileId,
@@ -73,14 +76,27 @@ export const createCV = async (req, res) => {
       });
     }
 
-    const cv = await prisma.cV.create({
+    const cv = await prisma.cv.create({
       data: {
         title,
         profileId: req.user.profileId,
         positionId: Number(positionId),
+
+        attributeValues: {
+          create: values.map((item) => ({
+            attributeId: Number(item.attributeId),
+            value: item.value,
+          })),
+        },
       },
+
       include: {
         position: true,
+        attributeValues: {
+          include: {
+            attribute: true,
+          },
+        },
       },
     });
 
@@ -88,8 +104,8 @@ export const createCV = async (req, res) => {
   } catch (error) {
     console.error(error);
 
-    return res.status(500).json({
-      message: "Failed to create CV",
+    res.status(500).json({
+      message: error.message,
     });
   }
 };

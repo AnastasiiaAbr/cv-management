@@ -74,6 +74,9 @@ export const login = async (req, res) => {
     where: {
       email,
     },
+    include: {
+      profile: true,
+    },
   });
 
   if (!user) {
@@ -96,6 +99,7 @@ export const login = async (req, res) => {
   const token = jwt.sign(
     {
       userId: user.id,
+      profileId: user.profile.id,
       email: user.email,
       role: user.role,
     },

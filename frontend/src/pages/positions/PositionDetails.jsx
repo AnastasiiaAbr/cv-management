@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Chip, Divider, Paper, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Chip, Divider, Paper, Stack, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import CVList from "../../components/CV/CVList";
 
 import ConfirmDialog from "../../components/common/ConfirmDialog";
 import ManageAttributes from "../../components/attributes/ManageAttributes";
@@ -10,6 +12,7 @@ import { usePositions } from "../../context/PositionContext";
 export default function PositionDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const {
     getPositionById,
@@ -18,7 +21,6 @@ export default function PositionDetails() {
   } = usePositions();
 
   const [position, setPosition] = useState(null);
-  const [tab, setTab] = useState(0);
   const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -34,6 +36,11 @@ export default function PositionDetails() {
       console.error(error);
     }
   };
+
+  const canManagePosition =
+    user?.role === "ADMIN" || user?.role === "RECRUITER";
+
+  const canCreateCV = user?.role === "CANDIDATE";
 
   const handleSaveAttributes = async (attributeIds) => {
     try {
@@ -68,97 +75,129 @@ export default function PositionDetails() {
           direction="row"
           justifyContent="space-between"
           alignItems="center"
+          gap={2}
           mb={3}
         >
-          <Typography variant="h5" sx={{mr: 2}}>
+          <Typography variant="h5" sx={{ mr: 4 }}>
             {position.title}
           </Typography>
 
-          <Stack direction="row" spacing={2}>
-            <Button
-              variant="outlined"
-              startIcon={<EditIcon />}
-              component={Link}
-              to={`/positions/${id}/edit`}
-            >
-              Edit
-            </Button>
-
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => setOpen(true)}
-            >
-              Delete
-            </Button>
-          </Stack>
-        </Stack>
-
-        <Divider sx={{ mb: 3 }} />
-
-        <Tabs
-          value={tab}
-          onChange={(e, value) => setTab(value)}
-          sx={{ mb: 3 }}
-        >
-          <Tab label="General" />
-          <Tab label="Attributes" />
-          <Tab label="Discussion" />
-        </Tabs>
-
-        {tab === 0 && (
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              Description
-            </Typography>
-
-            <Typography color="text.secondary" sx={{mb: 2}}>
-              {position.description || "No description"}
-            </Typography>
-          </Box>
-        )}
-
-        {tab === 1 && (
-          <Box>
-            {position.attributes.length === 0 ? (
-              <Typography color="text.secondary">
-                No attributes assigned.
-              </Typography>
-            ) : (
-              <Stack
-                direction="row"
-                spacing={1}
-                useFlexGap
-                flexWrap="wrap"
+          {canManagePosition && (
+            <Stack direction="row" spacing={2}>
+              <Button
+                variant="outlined"
+                startIcon={<EditIcon />}
+                component={Link}
+                to={`/positions/${id}/edit`}
               >
-                {position.attributes.map((attribute) => (
-                  <Chip
-                    key={attribute.id}
-                    label={attribute.name}
-                    color="primary"
-                    variant="outlined"
-                  />
-                ))}
-              </Stack>
-            )}
+                Edit
+              </Button>
 
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => setOpen(true)}
+              >
+                Delete
+              </Button>
+            </Stack>
+          )}
+        </Stack>
+        <Divider />
+
+        <Box sx={{ py: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Description
+          </Typography>
+
+          <Typography color="text.secondary">
+            {position.description || "No description"}
+          </Typography>
+        </Box>
+
+        <Divider />
+
+        <Box sx={{ py: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Attributes
+          </Typography>
+
+          {position.attributes.length === 0 ? (
+            <Typography color="text.secondary">
+              No attributes assigned.
+            </Typography>
+          ) : (
+            <Stack
+              direction="row"
+              spacing={1}
+              useFlexGap
+              flexWrap="wrap"
+              sx={{ mt: 2 }}
+            >
+              {position.attributes.map((attribute) => (
+                <Chip
+                  key={attribute.id}
+                  label={attribute.name}
+                  color="primary"
+                  variant="outlined"
+                />
+              ))}
+            </Stack>
+          )}
+
+          {canManagePosition && (
             <Button
-              sx={{ mt: 3, mb: 3 }}
+              sx={{ mt: 3 }}
               variant="contained"
               onClick={() => setDialogOpen(true)}
             >
               Manage Attributes
             </Button>
-          </Box>
-        )}
+          )}
+        </Box>
 
-        {tab === 2 && (
-          <Typography color="text.secondary" sx={{mb:2}}>
+        <Divider />
+
+        <Box sx={{ py: 4 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={3}
+          >
+            <Typography variant="h6" sx={{mr:2}}>
+              CVs
+            </Typography>
+
+            {canCreateCV && (
+              <Button
+                variant="contained"
+                component={Link}
+                to={`/positions/${position.id}/cv/new`}
+              >
+                Create CV
+              </Button>
+            )}
+          </Stack>
+
+          <CVList cvs={position.cvs} />
+        </Box>
+
+        <Divider />
+
+        <Box sx={{ py: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Discussion
+          </Typography>
+
+          <Typography color="text.secondary">
             Discussion will be implemented later.
           </Typography>
-        )}
+        </Box>
 
-        <Box mt={4}>
+        <Divider />
+
+        <Box sx={{ pt: 4 }}>
           <Button
             variant="outlined"
             component={Link}
@@ -168,21 +207,6 @@ export default function PositionDetails() {
           </Button>
         </Box>
       </Paper>
-
-      <ConfirmDialog
-        open={open}
-        title="Delete Position"
-        message="Are you sure you want to delete this position?"
-        onCancel={() => setOpen(false)}
-        onConfirm={handleDelete}
-      />
-
-      <ManageAttributes
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        position={position}
-        onSave={handleSaveAttributes}
-      />
     </>
   );
 }

@@ -121,6 +121,8 @@ export const getPositionById = async (req, res) => {
             category: true,
           },
         },
+
+        cvs: true,
       },
     });
 

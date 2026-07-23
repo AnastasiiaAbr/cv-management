@@ -1,11 +1,5 @@
 import { Router } from "express";
-import {
-  getCVs,
-  getCVById,
-  createCV,
-  updateCV,
-  deleteCV,
-} from "../controllers/cv.controller.js";
+import {getCVs, getCVById, createCV, updateCV, deleteCV} from "../controllers/cv.controller.js";
 import {authMiddleware} from "../middleware/auth.middleware.js";
 import { checkRoles } from "../middleware/checkRoles.middleware.js";
 

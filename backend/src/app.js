@@ -24,7 +24,7 @@ app.use("/attributes", attributeRoutes);
 
 app.use('/positions', positionRoutes);
 
-app.use("/api/cvs", cvRoutes);
+app.use("/cvs", cvRoutes);
 
 app.use("/users", userRoutes);
 
