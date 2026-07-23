@@ -3,6 +3,9 @@ import { Alert, CircularProgress, Paper, Stack, Typography, Button, Divider, Tex
 import { getProfile, updateProfile } from "../services/profile.service";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useProfileAttributes } from "../context/ProfileAttribute";
+import AddProfileAttributeDialog from "../components/attributes/AddProfileAttribute";
+import ProfileAttributeField from "../components/attributes/ProfileAttributeField";
 
 
 export default function Profile() {
@@ -21,8 +24,11 @@ export default function Profile() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
   const { logout } = useAuth();
+
+  const { profileAttributes } = useProfileAttributes();
 
   const handleLogout = () => {
     logout();
@@ -136,8 +142,8 @@ export default function Profile() {
           Profile
         </Typography>
 
-        <Typography variant="h6">
-          Personal Information
+        <Typography variant="h5">
+          Me
         </Typography>
 
         <TextField
@@ -145,6 +151,7 @@ export default function Profile() {
           name="firstName"
           value={formData.firstName}
           onChange={handleChange}
+          required
           fullWidth
         />
 
@@ -153,55 +160,9 @@ export default function Profile() {
           name="lastName"
           value={formData.lastName}
           onChange={handleChange}
+          required
           fullWidth
         />
-
-        <TextField
-          label="Email"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          fullWidth
-        />
-
-        <TextField
-          label="Phone"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          fullWidth
-        />
-
-        <Divider />
-
-        <Typography variant="h6">
-          Professional
-        </Typography>
-
-        <TextField
-          label="Headline"
-          name="headline"
-          value={formData.headline}
-          onChange={handleChange}
-          fullWidth
-        />
-
-        <TextField
-          label="Summary"
-          name="summary"
-          value={formData.summary}
-          onChange={handleChange}
-          multiline
-          rows={5}
-          fullWidth
-        />
-
-        <Divider />
-
-        <Typography variant="h6">
-          Location
-        </Typography>
 
         <TextField
           label="Location"
@@ -211,34 +172,47 @@ export default function Profile() {
           fullWidth
         />
 
-        <Divider />
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          sx={{ alignSelf: "flex-end" }}
+        >
+          Save
+        </Button>
 
-        <Typography variant="h6">
-          Links
+        <Divider sx={{ my: 4 }} />
+
+        <Typography variant="h5" gutterBottom>
+          Info
         </Typography>
 
-        <TextField
-          label="LinkedIn"
-          name="linkedin"
-          value={formData.linkedin}
-          onChange={handleChange}
-          fullWidth
-        />
+        {profileAttributes.length === 0 ? (
+          <Typography
+            color="text.secondary"
+            sx={{ mb: 2 }}
+          >
+            Add your personal information
+          </Typography>
+        ) : (
+          <Stack spacing={2}>
+            {profileAttributes.map((profileAttribute) => (
+              <ProfileAttributeField
+                key={profileAttribute.id}
+                profileAttribute={profileAttribute}
+              />
+            ))}
+          </Stack>
+        )}
 
-        <TextField
-          label="GitHub"
-          name="github"
-          value={formData.github}
-          onChange={handleChange}
-          fullWidth
-        />
-
-        <TextField
-          label="Website"
-          name="website"
-          value={formData.website}
-          onChange={handleChange}
-          fullWidth
+        <Button
+          variant="outlined"
+          onClick={() => setDialogOpen(true)}
+        >
+          Add attribute
+        </Button>
+        <AddProfileAttributeDialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
         />
 
         <Stack

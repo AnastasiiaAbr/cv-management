@@ -3,7 +3,7 @@ import {Button, MenuItem, Paper, Stack, TextField } from "@mui/material";
 
 import { getCategories } from "../../services/category.service";
 
-const ATTRIBUTE_TYPES = [
+export const ATTRIBUTE_TYPES = [
   "STRING",
   "TEXT",
   "IMAGE",
