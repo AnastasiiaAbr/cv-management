@@ -104,7 +104,7 @@ export default function Login() {
             variant="outlined"
             fullWidth
             onClick={() => {
-              window.location.href = "http://localhost:3000/auth/github";
+              window.location.href = "https://cv-management-tifl.onrender.com/auth/github";
             }}
           >
             Continue with GitHub
