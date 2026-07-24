@@ -10,7 +10,6 @@ export default function AllCVsPage() {
     const loadCVs = async () => {
       try {
         const data = await getAllCVs();
-        console.log("CVs:", data);
         setCVs(data);
       } catch (error) {
         console.error(error);

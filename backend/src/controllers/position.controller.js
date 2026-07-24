@@ -122,7 +122,12 @@ export const getPositionById = async (req, res) => {
           },
         },
 
-        cvs: true,
+        cvs: {
+          include: {
+            profile: true,
+            position: true,
+          },
+        },
       },
     });
 
@@ -134,12 +139,12 @@ export const getPositionById = async (req, res) => {
 
     res.json(position);
   } catch (error) {
-  console.error(error);
+    console.error(error);
 
-  res.status(500).json({
-    message: error.message,
-  });
-}
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 export const updatePositionAttributes = async (req, res) => {

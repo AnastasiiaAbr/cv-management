@@ -36,13 +36,16 @@ export default function PositionDetails() {
   };
 
   const loadMyCV = async () => {
-    try {
-      const cv = await getMyCVByPosition(id);
-      setMyCV(cv);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  try {
+    const cv = await getMyCVByPosition(id);
+
+    console.log("My CV:", cv);
+
+    setMyCV(cv);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   useEffect(() => {
     loadPosition();

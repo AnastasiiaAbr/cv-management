@@ -239,6 +239,7 @@ export const getMyCVByPosition = async (req, res) => {
         },
       },
       include: {
+        profile: true,
         position: true,
         attributeValues: {
           include: {

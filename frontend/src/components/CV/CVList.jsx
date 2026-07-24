@@ -24,7 +24,6 @@ export default function CVList({ cvs = [] }) {
       </Typography>
     );
   }
-  console.log(cvs[0]);
   return (
     <>
       <Box
