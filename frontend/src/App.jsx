@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Positions from "./pages/positions/Positions";
 import NotFound from "./pages/NotFound";
-import Layout from "./components/Layout";
+import Layout from "./components/common/Layout";
 import PositionDetails from "./pages/positions/PositionDetails";
 import CreatePosition from "./pages/positions/CreatePositions";
 import CreateAttribute from "./pages/attributes/createAttribute";

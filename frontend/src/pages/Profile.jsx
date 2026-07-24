@@ -4,9 +4,11 @@ import { getProfile, updateProfile } from "../services/profile.service";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useProfileAttributes } from "../context/ProfileAttribute";
+import { useProjects } from "../context/ProjectContext";
 import AddProfileAttributeDialog from "../components/attributes/AddProfileAttribute";
 import ProfileAttributeField from "../components/attributes/ProfileAttributeField";
-
+import ProjectCard from '../components/projects/ProjectCard';
+import AddProjectDialog from "../components/projects/AddProjectDialog";
 
 export default function Profile() {
   const [formData, setFormData] = useState({
@@ -25,10 +27,13 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [projectDialogOpen, setProjectDialogOpen] = useState(false)
+  const [selectedProject, setSelectedProject] = useState(null);
   const navigate = useNavigate();
   const { logout } = useAuth();
 
   const { profileAttributes } = useProfileAttributes();
+  const { projects, removeProject } = useProjects();
 
   const handleLogout = () => {
     logout();
@@ -213,6 +218,43 @@ export default function Profile() {
         <AddProfileAttributeDialog
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
+        />
+
+        <Typography variant="h5" sx={{ mt: 4 }}>
+          Projects and experience
+        </Typography>
+
+        <Button
+          variant="contained"
+          sx={{ mt: 2, mb: 2 }}
+          onClick={() => {
+            setSelectedProject(null);
+            setProjectDialogOpen(true);
+          }}
+        >
+          Add project
+        </Button>
+
+        <Stack spacing={2}>
+          {projects.map(project => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onDelete={removeProject}
+              onEdit={(project) => {
+                setSelectedProject(project);
+                setProjectDialogOpen(true);
+              }}
+            />
+          ))}
+        </Stack>
+        <AddProjectDialog
+          open={projectDialogOpen}
+          project={selectedProject}
+          onClose={() => {
+            setProjectDialogOpen(false);
+            setSelectedProject(null);
+          }}
         />
 
         <Stack

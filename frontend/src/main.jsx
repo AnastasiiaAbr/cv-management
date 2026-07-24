@@ -10,6 +10,7 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import { CategoryProvider } from './context/CategoryContext.jsx'
 import { CVProvider } from './context/CVContext.jsx';
 import { ProfileAttributeProvider } from './context/ProfileAttribute.jsx'
+import { ProjectProvider } from './context/ProjectContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -20,7 +21,9 @@ createRoot(document.getElementById('root')).render(
             <PositionProvider>
               <CVProvider>
                 <ProfileAttributeProvider>
-                  <App />
+                  <ProjectProvider>
+                    <App />
+                  </ProjectProvider>
                 </ProfileAttributeProvider>
               </CVProvider>
             </PositionProvider>

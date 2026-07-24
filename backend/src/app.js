@@ -8,7 +8,8 @@ import attributeRoutes from './routes/attribute.routes.js';
 import positionRoutes from './routes/position.routes.js';
 import cvRoutes from './routes/cv.routes.js';
 import userRoutes from "./routes/user.routes.js";
-import profileAttributeRoutes from './routes/profileAttr.route.js';
+import profileAttributeRoutes from './routes/profileAttr.routes.js';
+import projectRoutes from './routes/projects.routes.js';
 
 const app = express();
 
@@ -30,6 +31,8 @@ app.use("/cvs", cvRoutes);
 app.use("/users", userRoutes);
 
 app.use('/profile-attributes', profileAttributeRoutes);
+
+app.use('/projects', projectRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({
