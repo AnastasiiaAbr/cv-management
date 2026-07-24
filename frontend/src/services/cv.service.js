@@ -26,3 +26,7 @@ export const getCVs = async () =>
 export const getMyCVByPosition = async (positionId) => {
   return apiRequest(`/cvs/position/${positionId}`);
 };
+
+export const getAllCVs = async () => {
+  return apiRequest("/cvs/all");
+};

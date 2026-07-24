@@ -40,6 +40,11 @@ export const getCVById = async (req, res) => {
             attribute: true,
           },
         },
+        projects: {
+          include: {
+            project: true,
+          },
+        },
       },
     });
 
@@ -94,7 +99,6 @@ export const createCV = async (req, res) => {
       data: {
         profileId: req.user.profileId,
         positionId: Number(positionId),
-
         attributeValues: {
           create: values.map((item) => ({
             attributeId: Number(item.attributeId),
@@ -102,12 +106,16 @@ export const createCV = async (req, res) => {
           })),
         },
       },
-
       include: {
         position: true,
         attributeValues: {
           include: {
             attribute: true,
+          },
+        },
+        projects: {
+          include: {
+            project: true,
           },
         },
       },
@@ -117,7 +125,7 @@ export const createCV = async (req, res) => {
   } catch (error) {
     console.error(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
@@ -232,6 +240,16 @@ export const getMyCVByPosition = async (req, res) => {
       },
       include: {
         position: true,
+        attributeValues: {
+          include: {
+            attribute: true,
+          },
+        },
+        projects: {
+          include: {
+            project: true,
+          },
+        },
       },
     });
 
@@ -241,6 +259,69 @@ export const getMyCVByPosition = async (req, res) => {
 
     return res.status(500).json({
       message: "Failed to get CV",
+    });
+  }
+};
+
+export const getCVsByPosition = async (req, res) => {
+  try {
+    const { positionId } = req.params;
+
+    const cvs = await prisma.cv.findMany({
+      where: {
+        positionId: Number(positionId),
+      },
+      include: {
+        profile: true,
+        position: true,
+        attributeValues: {
+          include: {
+            attribute: true,
+          },
+        },
+        projects: {
+          include: {
+            project: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json(cvs);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to get CVs",
+    });
+  }
+};
+
+export const getAllCVs = async (req, res) => {
+  try {
+    const cvs = await prisma.cv.findMany({
+      include: {
+        profile: {
+          include: {
+            user: true,
+          },
+        },
+        position: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json(cvs);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to get CVs",
     });
   }
 };

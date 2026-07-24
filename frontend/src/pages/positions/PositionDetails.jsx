@@ -185,15 +185,8 @@ export default function PositionDetails() {
             </Typography>
 
             {canCreateCV && (
-              myCV ? (
-                <Button
-                  variant="contained"
-                  component={Link}
-                  to={`/cvs/${myCV.id}/edit`}
-                >
-                  Edit CV
-                </Button>
-              ) : (
+              !myCV && (
+              
                 <Button
                   variant="contained"
                   component={Link}
@@ -205,7 +198,15 @@ export default function PositionDetails() {
             )}
           </Stack>
 
-          <CVList cvs={position.cvs} />
+          <CVList
+            cvs={
+              user?.role === "CANDIDATE"
+                ? myCV
+                  ? [myCV]
+                  : []
+                : position.cvs
+            }
+          />
         </Box>
 
         <Divider />

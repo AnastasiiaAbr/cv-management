@@ -20,6 +20,7 @@ import CreateCV from "./pages/CVs/CreateCV";
 import CVDetails from "./pages/CVs/CVDetails";
 import RoleRoute from "./components/common/RoleRoute";
 import EditCV from "./pages/CVs/EditCV";
+import AllCVsPage from './pages/CVs/AllCVs'
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
             <Route path="attributes" element={<Attributes />} />
             <Route path="attributes/new" element={<CreateAttribute />} />
             <Route path="attributes/:id/edit" element={<EditAttribute />} />
+            <Route path='cvs' element={<AllCVsPage />} />
           </Route>
 
           <Route element={<AdminRoute />}>
