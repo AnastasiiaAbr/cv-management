@@ -4,6 +4,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import CVList from "../../components/CV/CVList";
+import { getMyCVByPosition } from "../../services/cv.service";
 
 import ConfirmDialog from "../../components/common/ConfirmDialog";
 import ManageAttributes from "../../components/attributes/ManageAttributes";
@@ -23,10 +24,7 @@ export default function PositionDetails() {
   const [position, setPosition] = useState(null);
   const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  useEffect(() => {
-    loadPosition();
-  }, [id]);
+  const [myCV, setMyCV] = useState(null);
 
   const loadPosition = async () => {
     try {
@@ -36,6 +34,23 @@ export default function PositionDetails() {
       console.error(error);
     }
   };
+
+  const loadMyCV = async () => {
+    try {
+      const cv = await getMyCVByPosition(id);
+      setMyCV(cv);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadPosition();
+
+    if (user?.role === "CANDIDATE") {
+      loadMyCV();
+    }
+  }, [id]);
 
   const canManagePosition =
     user?.role === "ADMIN" || user?.role === "RECRUITER";
@@ -165,18 +180,28 @@ export default function PositionDetails() {
             alignItems="center"
             mb={3}
           >
-            <Typography variant="h6" sx={{mr:2}}>
+            <Typography variant="h6" sx={{ mr: 2 }}>
               CVs
             </Typography>
 
             {canCreateCV && (
-              <Button
-                variant="contained"
-                component={Link}
-                to={`/positions/${position.id}/cv/new`}
-              >
-                Create CV
-              </Button>
+              myCV ? (
+                <Button
+                  variant="contained"
+                  component={Link}
+                  to={`/cvs/${myCV.id}/edit`}
+                >
+                  Edit CV
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  component={Link}
+                  to={`/positions/${position.id}/cv/new`}
+                >
+                  Create CV
+                </Button>
+              )
             )}
           </Stack>
 

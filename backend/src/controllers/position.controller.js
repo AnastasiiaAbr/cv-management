@@ -134,10 +134,12 @@ export const getPositionById = async (req, res) => {
 
     res.json(position);
   } catch (error) {
-    res.status(500).json({
-      message: "Failed to load position",
-    });
-  }
+  console.error(error);
+
+  res.status(500).json({
+    message: error.message,
+  });
+}
 };
 
 export const updatePositionAttributes = async (req, res) => {

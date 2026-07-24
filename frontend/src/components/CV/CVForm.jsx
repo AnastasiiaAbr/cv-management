@@ -1,14 +1,28 @@
-import { useState } from "react";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useCV } from "../../context/CVContext";
 
-export default function CVForm({ position }) {
-  const [title, setTitle] = useState("");
-  const [values, setValues] = useState({});
+export default function CVForm({
+  position,
+  initialValues = {},
+  cvId,
+}) {
   const navigate = useNavigate();
 
-  const { createNewCV } = useCV();
+  const { createCV, updateCV } = useCV();
+
+  const [values, setValues] = useState(initialValues);
+
+  useEffect(() => {
+    setValues(initialValues);
+  }, [initialValues]);
 
   const handleChange = (attributeId, value) => {
     setValues((prev) => ({
@@ -28,13 +42,18 @@ export default function CVForm({ position }) {
         })
       );
 
-      await createNewCV({
-        title,
+      const payload = {
         positionId: position.id,
         values: attributeValues,
-      });
+      };
 
-      navigate(`/positions/${position.id}`);
+      if (cvId) {
+        await updateCV(cvId, payload);
+        navigate(`/cvs/${cvId}`);
+      } else {
+        const cv = await createCV(payload);
+        navigate(`/cvs/${cv.id}`);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -46,14 +65,6 @@ export default function CVForm({ position }) {
       onSubmit={handleSubmit}
     >
       <Stack spacing={3}>
-        <TextField
-          label="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          fullWidth
-          required
-        />
-
         <TextField
           label="Position"
           value={position.title}
@@ -81,7 +92,7 @@ export default function CVForm({ position }) {
           type="submit"
           variant="contained"
         >
-          Save
+          {cvId ? "Update CV" : "Create CV"}
         </Button>
       </Stack>
     </Box>

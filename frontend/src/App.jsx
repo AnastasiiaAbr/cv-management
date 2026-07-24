@@ -19,6 +19,7 @@ import AdminPage from "./pages/AdminPage";
 import CreateCV from "./pages/CVs/CreateCV";
 import CVDetails from "./pages/CVs/CVDetails";
 import RoleRoute from "./components/common/RoleRoute";
+import EditCV from "./pages/CVs/EditCV";
 
 
 function App() {
@@ -41,6 +42,8 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="positions/:id/cv/new" element={<CreateCV />} />
             <Route path="cvs/:id" element={<CVDetails />} />
+            <Route path="cvs/:id/edit" element={<EditCV />}
+            />
           </Route>
 
           <Route element={<RoleRoute roles={["ADMIN", "RECRUITER"]} />}>

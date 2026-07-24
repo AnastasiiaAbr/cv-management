@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {
-  Box,
-  Divider,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { useParams, Link } from "react-router-dom";
+import { Box, Divider, Paper, Stack, Typography, Button, } from "@mui/material";
 
 import { useCV } from "../../context/CVContext";
 
@@ -32,15 +26,23 @@ export default function CVDetails() {
 
   return (
     <>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        {cv.title}
-      </Typography>
-
       <Paper sx={{ p: 4 }}>
 
-        <Typography variant="h6">
-          Position
-        </Typography>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ mb: 3 }}
+        >
+
+          <Button
+            variant="contained"
+            component={Link}
+            to={`/cvs/${cv.id}/edit`}
+          >
+            Edit
+          </Button>
+        </Stack>
 
         <Typography color="text.secondary">
           {cv.position.title}
@@ -65,6 +67,32 @@ export default function CVDetails() {
             </Box>
           ))}
         </Stack>
+
+        <Divider sx={{ my: 4 }} />
+
+        <Typography variant="h6" gutterBottom>
+          Projects
+        </Typography>
+
+        {cv.projects.length === 0 ? (
+          <Typography color="text.secondary">
+            No projects added.
+          </Typography>
+        ) : (
+          <Stack spacing={2}>
+            {cv.projects.map(({ project }) => (
+              <Box key={project.id}>
+                <Typography fontWeight={600}>
+                  {project.title}
+                </Typography>
+
+                <Typography color="text.secondary">
+                  {project.description}
+                </Typography>
+              </Box>
+            ))}
+          </Stack>
+        )}
 
       </Paper>
     </>

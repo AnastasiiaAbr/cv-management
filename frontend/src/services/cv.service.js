@@ -6,9 +6,6 @@ export const createCV = async (cv) =>
     body: JSON.stringify(cv),
   });
 
-export const getCV = async (id) =>
-  apiRequest(`/cvs/${id}`);
-
 export const updateCV = async (id, cv) =>
   apiRequest(`/cvs/${id}`, {
     method: "PUT",
@@ -22,3 +19,10 @@ export const deleteCV = async (id) =>
 
 export const getCVById = async (id) =>
   apiRequest(`/cvs/${id}`);
+
+export const getCVs = async () =>
+  apiRequest("/cvs");
+
+export const getMyCVByPosition = async (positionId) => {
+  return apiRequest(`/cvs/position/${positionId}`);
+};

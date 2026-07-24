@@ -35,6 +35,11 @@ export const getCVById = async (req, res) => {
       },
       include: {
         position: true,
+        attributeValues: {
+          include: {
+            attribute: true,
+          },
+        },
       },
     });
 
@@ -56,10 +61,19 @@ export const getCVById = async (req, res) => {
 
 export const createCV = async (req, res) => {
   try {
+    const { positionId, values = [] } = req.body;
 
-        console.log("USER:", req.user);
-    console.log("BODY:", req.body);
-    const { title, positionId, values = [] } = req.body;
+    const position = await prisma.position.findUnique({
+      where: {
+        id: Number(positionId),
+      },
+    });
+
+    if (!position) {
+      return res.status(404).json({
+        message: "Position not found",
+      });
+    }
 
     const existingCV = await prisma.cv.findUnique({
       where: {
@@ -78,7 +92,6 @@ export const createCV = async (req, res) => {
 
     const cv = await prisma.cv.create({
       data: {
-        title,
         profileId: req.user.profileId,
         positionId: Number(positionId),
 
@@ -113,7 +126,7 @@ export const createCV = async (req, res) => {
 export const updateCV = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title } = req.body;
+    const { values = [] } = req.body;
 
     const cv = await prisma.cv.findFirst({
       where: {
@@ -128,15 +141,36 @@ export const updateCV = async (req, res) => {
       });
     }
 
+    await prisma.cVAttributeValue.deleteMany({
+      where: {
+        cvId: Number(id),
+      },
+    });
+
     const updatedCV = await prisma.cv.update({
       where: {
         id: Number(id),
       },
       data: {
-        title,
+        attributeValues: {
+          create: values.map((item) => ({
+            attributeId: Number(item.attributeId),
+            value: item.value,
+          })),
+        },
       },
       include: {
         position: true,
+        attributeValues: {
+          include: {
+            attribute: true,
+          },
+        },
+        projects: {
+          include: {
+            project: true,
+          },
+        },
       },
     });
 
@@ -181,6 +215,32 @@ export const deleteCV = async (req, res) => {
 
     return res.status(500).json({
       message: "Failed to delete CV",
+    });
+  }
+};
+
+export const getMyCVByPosition = async (req, res) => {
+  try {
+    const { positionId } = req.params;
+
+    const cv = await prisma.cv.findUnique({
+      where: {
+        profileId_positionId: {
+          profileId: req.user.profileId,
+          positionId: Number(positionId),
+        },
+      },
+      include: {
+        position: true,
+      },
+    });
+
+    return res.status(200).json(cv);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to get CV",
     });
   }
 };

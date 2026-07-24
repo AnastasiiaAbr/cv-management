@@ -70,17 +70,31 @@ model Profile {
 }
 
 model cv {
-  id              Int                @id @default(autoincrement())
-  title           String
-  profileId       Int
-  positionId      Int
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  id         Int      @id @default(autoincrement())
+
+  profileId  Int
+  positionId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile  Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  position Position @relation(fields: [positionId], references: [id])
+
   attributeValues CVAttributeValue[]
-  position        Position           @relation(fields: [positionId], references: [id])
-  profile         Profile            @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  projects        CVProject[]
 
   @@unique([profileId, positionId])
+}
+
+model CVProject {
+  cvId      Int
+  projectId Int
+
+  cv      cv      @relation(fields: [cvId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([cvId, projectId])
 }
 
 model CVAttributeValue {
@@ -127,6 +141,7 @@ model Project {
   profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   technologies ProjectTechnology[]
+  cvProjects CVProject[]
 }
 
 model Technology {

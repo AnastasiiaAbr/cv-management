@@ -15,10 +15,6 @@ export default function CVCard({ cv }) {
     <Card variant="outlined">
       <CardContent>
         <Stack spacing={1}>
-          <Typography variant="h6">
-            {cv.title}
-          </Typography>
-
           <Typography
             variant="body2"
             color="text.secondary"
