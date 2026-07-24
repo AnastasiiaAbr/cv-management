@@ -10,7 +10,7 @@ import { usePositions } from "../context/PositionContext";
 import { useAuth } from "../context/AuthContext";
 
 export default function HomePage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { positions } = usePositions();
 
   const latestPositions = [...positions]
@@ -52,7 +52,7 @@ export default function HomePage() {
               tailored resumes for every position.
             </Typography>
 
-            {!user && (
+            {!loading && !user && (
               <Stack direction="row" spacing={2}>
                 <Button
                   component={Link}
