@@ -140,7 +140,8 @@ export const getMe = async (req, res) => {
 export const githubLogin = (req, res) => {
   const params = new URLSearchParams({
     client_id: process.env.GITHUB_CLIENT_ID,
-    redirect_uri: "https://cv-management-tifl.onrender.com/auth/github/callback",
+    redirect_uri:
+      "https://cv-management-back.onrender.com/auth/github/callback",
     scope: "user:email",
   });
 
