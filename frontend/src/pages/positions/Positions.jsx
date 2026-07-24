@@ -92,16 +92,6 @@ export default function Positions() {
               </Button>
 
               <Button
-                variant="outlined"
-                disabled={selectedPositions.length !== 1}
-                onClick={() => {
-                  console.log("Duplicate");
-                }}
-              >
-                Duplicate
-              </Button>
-
-              <Button
                 color="error"
                 variant="outlined"
                 disabled={selectedPositions.length === 0}
