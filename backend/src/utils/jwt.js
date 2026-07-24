@@ -1,0 +1,16 @@
+import jwt from "jsonwebtoken";
+
+export function generateToken(user) {
+  return jwt.sign(
+    {
+      userId: user.id,
+      profileId: user.profile.id,
+      email: user.email,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
+}

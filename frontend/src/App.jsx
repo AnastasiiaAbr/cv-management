@@ -10,7 +10,7 @@ import EditAttribute from "./pages/attributes/EditAttribute";
 import EditPosition from "./pages/positions/EditPositions";
 import Attributes from "./pages/attributes/Attributes";
 import Register from "./pages/Register";
-import Login from "./pages/Login";
+import Login from "./pages/login/Login";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import PublicRoute from "./components/common/PublicRoute";
@@ -21,7 +21,7 @@ import CVDetails from "./pages/CVs/CVDetails";
 import RoleRoute from "./components/common/RoleRoute";
 import EditCV from "./pages/CVs/EditCV";
 import AllCVsPage from './pages/CVs/AllCVs'
-
+import OAuth from "./pages/login/OAuth";
 
 function App() {
   return (
@@ -32,6 +32,7 @@ function App() {
           <Route element={<PublicRoute />}>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="oauth-success" element={<OAuth />} />
             <Route path="*" element={<NotFound />} />
           </Route>
 

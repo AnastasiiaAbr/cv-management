@@ -9,9 +9,9 @@ import {
   Alert,
 } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
-import { loginUser } from "../services/auth.service";
+import { loginUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -99,6 +99,16 @@ export default function Login() {
           >
             Login
           </LoadingButton>
+
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={() => {
+              window.location.href = "http://localhost:3000/auth/github";
+            }}
+          >
+            Continue with GitHub
+          </Button>
         </Stack>
       </Paper>
       <Snackbar
